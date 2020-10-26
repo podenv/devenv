@@ -72,6 +72,8 @@
   (global-set-key (kbd "C-x k") 'kill-this-buffer)
   ;; Delete trailing space on save
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  ;; Ensure file ends with newline
+  (setq-default require-final-newline t)
   ;; Mark file executable if it has a shebang
   (add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
   ;; automatic parens pairing
