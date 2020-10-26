@@ -353,7 +353,6 @@ let
     buildInputs = devenv;
     shellHook = ''
       export FONTCONFIG_FILE=${fonts}
-      echo running!
     '';
   };
 
