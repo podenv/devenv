@@ -32,7 +32,7 @@ withGraphQL ? false, withCss ? false,
 # text
 withMarkdown ? true, withRestructuredText ? true,
 # wip language
-withOcaml ? false, withReasonNative ? false,
+withIdris ? false, withOcaml ? false, withReasonNative ? false,
 # javascript language
 withReason ? true, withPurescript ? false,
 # minimal override
@@ -119,6 +119,12 @@ let
         buildInputs = [ nixpkgs.nixfmt ];
         emacsPkgs = epkgs: [ epkgs.nix-mode ];
         emacsConfig = elisp "nix";
+      }
+      {
+        enabled = withIdris;
+        buildInputs = [ nixpkgs.idris2 ];
+        emacsPkgs = epkgs: [ epkgs.idris-mode ];
+        emacsConfig = elisp "idris";
       }
       {
         enabled = withHaskell;
