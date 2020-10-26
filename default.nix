@@ -91,8 +91,24 @@ let
         enabled = withPython;
         minimal = true;
         buildInputs = [
-          (nixpkgs.python38.withPackages
-            (ps: with ps; [ virtualenv tox pip mypy black flake8 ]))
+          (nixpkgs.python38.withPackages (ps:
+            with ps;
+            let
+              git-review = (when withGit [
+                (ps.buildPythonPackage rec {
+                  pname = "git-review";
+                  version = "1.28.0";
+                  doCheck = false;
+                  propagatedBuildInputs = [ pbr six requests setuptools ];
+                  name = "${pname}-${version}";
+                  src = ps.fetchPypi {
+                    inherit pname version;
+                    sha256 =
+                      "0nn17mfqvsa3ryjz53qjslmf60clc0vx2115kkj66h28p6vsnflf";
+                  };
+                })
+              ]);
+            in git-review ++ [ virtualenv tox pip mypy black flake8 ]))
         ];
         emacsConfig = elisp "python";
         emacsPkgs = epkgs: [ epkgs.flycheck-mypy ];
