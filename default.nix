@@ -112,6 +112,28 @@ let
                   };
                 })
               ]);
+              typing-extensions = ps.typing-extensions.overridePythonAttrs
+                (old: rec {
+                  version = "3.7.4.3";
+                  src = ps.fetchPypi {
+                    inherit version;
+                    pname = "typing_extensions";
+                    sha256 =
+                      "0356ljrrplm917dqgpn8wjkw6j3mpp916gwxas7jhc3xc4xhgm4r";
+                  };
+                });
+              black = ps.black.overridePythonAttrs (old: rec {
+                propagatedBuildInputs = [ typing-extensions ps.mypy-extensions ]
+                  ++ old.propagatedBuildInputs;
+                version = "20.8b1";
+                doCheck = false;
+                src = ps.fetchPypi {
+                  inherit version;
+                  pname = "black";
+                  sha256 =
+                    "1spv6sldp3mcxr740dh3ywp25lly9s8qlvs946fin44rl1x5a0hw";
+                };
+              });
               ansible = (when withAnsible [ ps.ansible ]);
             in git-review ++ ansible
             ++ [ virtualenv tox pip mypy black flake8 ]))
