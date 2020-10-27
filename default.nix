@@ -17,6 +17,8 @@ withEmacs ? true, withVSCode ? false, withVim ? false, withPyCharm ? false,
 withSolarized ? true,
 # emacs with vim binding
 withEmacsEvil ? false,
+# vscode with Vim binding
+withCodeVim ? false,
 # faster emacs
 withEmacsGcc ? false,
 # git
@@ -378,7 +380,8 @@ let
   # code
   vscode = nixpkgs.vscode-with-extensions.override {
     vscodeExtensions =
-      (concatModuleList (m: m.vscodeExtensions nixpkgs.vscode-extensions));
+      (when withCodeVim [ nixpkgs.vscode-extensions.vscodevim.vim ])
+      ++ (concatModuleList (m: m.vscodeExtensions nixpkgs.vscode-extensions));
   };
 
   # pycharm
