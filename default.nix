@@ -401,6 +401,7 @@ let
     buildInputs = devenv;
     shellHook = ''
       export FONTCONFIG_FILE=${fonts}
+      export LD_LIBRARY_PATH=${nixpkgs.stdenv.cc.cc.lib}/lib/:/run/opengl-driver/lib/
     '';
   };
 
