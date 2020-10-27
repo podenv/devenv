@@ -29,6 +29,8 @@ withNeuron ? false, withOrg ? false,
 withC ? true, withPython ? true, withHaskell ? false, withNix ? false,
 # conf
 withDhall ? true, withJson ? true, withYaml ? true,
+# admin
+withAnsible ? false,
 # web
 withGraphQL ? false, withCss ? false,
 # text
@@ -110,7 +112,9 @@ let
                   };
                 })
               ]);
-            in git-review ++ [ virtualenv tox pip mypy black flake8 ]))
+              ansible = (when withAnsible [ ps.ansible ]);
+            in git-review ++ ansible
+            ++ [ virtualenv tox pip mypy black flake8 ]))
         ];
         emacsConfig = elisp "python";
         emacsPkgs = epkgs: [ epkgs.flycheck-mypy ];
