@@ -12,7 +12,7 @@
 # base
 withX ? true,
 # editor
-withEmacs ? true, withVSCode ? false, withVim ? false,
+withEmacs ? true, withVSCode ? false, withVim ? false, withPyCharm ? false,
 # eye friendly, low-constrat color theme
 withSolarized ? true,
 # emacs with vim binding
@@ -366,10 +366,14 @@ let
       (concatModuleList (m: m.vscodeExtensions nixpkgs.vscode-extensions));
   };
 
+  # pycharm
+  pycharm = nixpkgs.jetbrains.pycharm-community;
+
   # devenv derivations collection:
   devenv = (with nixpkgs; [ bash fontconfig hack-font ripgrep man findutils ])
     ++ (when withEmacs [ emacs ]) ++ (when withVim [ vim ])
-    ++ (when withVSCode [ vscode ]) ++ (concatModuleList (m: m.buildInputs));
+    ++ (when withVSCode [ vscode ]) ++ (when withPyCharm [ pycharm ])
+    ++ (concatModuleList (m: m.buildInputs));
 
   shellEnv = nixpkgs.mkShell {
     buildInputs = devenv;
