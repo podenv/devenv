@@ -39,6 +39,9 @@
 (use-package man
   :defer t)
 
+(use-package woman
+  :defer t)
+
 (use-package prog-mode
   :config (global-prettify-symbols-mode)
   (defun indicate-buffer-boundaries-left ()
@@ -299,6 +302,11 @@
   (setq-default
    eshell-hist-ignoredups t
    ))
+
+(use-package company
+  :diminish
+  :config
+  (global-company-mode 1))
 
 (use-package format-all
   :config
