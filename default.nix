@@ -119,6 +119,21 @@ let
         buildInputs = [ nixpkgs.nixfmt ];
         emacsPkgs = epkgs: [ epkgs.nix-mode ];
         emacsConfig = elisp "nix";
+        vscodeExtensions = vsext:
+          (nixpkgs.vscode-utils.extensionsFromVscodeMarketplace [
+            {
+              name = "nix";
+              publisher = "bbenoist";
+              version = "1.0.1";
+              sha256 = "0zd0n9f5z1f0ckzfjr38xw2zzmcxg1gjrava7yahg5cvdcw6l35b";
+            }
+            {
+              name = "nixfmt-vscode";
+              publisher = "brettm12345";
+              version = "0.0.1";
+              sha256 = "07w35c69vk1l6vipnq3qfack36qcszqxn8j3v332bl0w6m02aa7k";
+            }
+          ]);
       }
       {
         enabled = withIdris;
