@@ -305,6 +305,16 @@ let
           ];
         emacsConfig = elisp "neuron";
       }
+      {
+        enabled = withLsp;
+        emacsConfig = elisp "lsp";
+        emacsPkgs = epkgs: [
+          epkgs.lsp-mode
+          epkgs.lsp-ui
+          epkgs.lsp-ivy
+          epkgs.company-lsp
+        ];
+      }
     ]);
 
   concatModuleText = f: builtins.concatStringsSep "\n" (map f modules);
@@ -385,9 +395,7 @@ let
         epkgs.simpleclip
         epkgs.diminish
       ] ++ ivy ++ prog;
-      lsp = [ epkgs.lsp-mode epkgs.lsp-ui epkgs.company-lsp ];
-    in base ++ (when withLsp lsp)
-    ++ (concatModuleList (m: m.emacsPkgs epkgs))));
+    in base ++ (concatModuleList (m: m.emacsPkgs epkgs))));
 
   # vim
   vim = nixpkgs.vim_configurable.customize {
