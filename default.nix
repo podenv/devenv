@@ -207,7 +207,8 @@ let
       }
       {
         enabled = withReason;
-        buildInputs = [ nixpkgs.bs-platform ];
+        buildInputs = [ nixpkgs.bs-platform ] ++ (when withLsp
+          [ (import ./reason-language-server.nix { nixpkgs = nixpkgs; }) ]);
         emacsPkgs = epkgs: [ epkgs.reason-mode ];
         vscodeExtensions = vpkgs:
           (nixpkgs.vscode-utils.extensionsFromVscodeMarketplace [
