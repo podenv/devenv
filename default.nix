@@ -210,6 +210,7 @@ let
         buildInputs = [ nixpkgs.bs-platform ] ++ (when withLsp
           [ (import ./reason-language-server.nix { nixpkgs = nixpkgs; }) ]);
         emacsPkgs = epkgs: [ epkgs.reason-mode ];
+        emacsConfig = elisp "reason";
         vscodeExtensions = vpkgs:
           (nixpkgs.vscode-utils.extensionsFromVscodeMarketplace [
             {
@@ -237,7 +238,7 @@ let
       }
       {
         name = "ocaml";
-        enabled = withOcaml || withReasonNative;
+        enabled = withOcaml || withReasonNative || withReason;
         buildInputs = [
           nixpkgs.dune_2
           nixpkgs.opam
