@@ -13,6 +13,8 @@
 withX ? true,
 # editor
 withEmacs ? true, withVSCode ? false, withVim ? false, withPyCharm ? false,
+# lsp
+withLsp ? false,
 # eye friendly, low-constrat color theme
 withSolarized ? true,
 # emacs with vim binding
@@ -272,7 +274,9 @@ let
             rev = "3e9101c5dfd69a9fc28fe4998aff378f91bfcb64";
             sha256 = "1nsn1n4sx4za6jipcid1293rdw8lqgj9097s0khiij3fz0bzhrg9";
           }) { pkgs = nixpkgs; };
-        in (with dhall; [ dhall-simple dhall-json-simple dhall-yaml-simple ]);
+        in (with dhall;
+          [ dhall-simple dhall-json-simple dhall-yaml-simple ]
+          ++ (when withLsp [ dhall-lsp-simple ]));
       }
       {
         enabled = withMarkdown;
@@ -380,7 +384,9 @@ let
         epkgs.simpleclip
         epkgs.diminish
       ] ++ ivy ++ prog;
-    in base ++ (concatModuleList (m: m.emacsPkgs epkgs))));
+      lsp = [ epkgs.lsp-mode epkgs.lsp-ui epkgs.company-lsp ];
+    in base ++ (when withLsp lsp)
+    ++ (concatModuleList (m: m.emacsPkgs epkgs))));
 
   # vim
   vim = nixpkgs.vim_configurable.customize {
