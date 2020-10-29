@@ -395,6 +395,7 @@ let
         epkgs.f
         epkgs.simpleclip
         epkgs.diminish
+        epkgs.ripgrep
       ] ++ ivy ++ prog;
     in base ++ (concatModuleList (m: m.emacsPkgs epkgs))));
 
