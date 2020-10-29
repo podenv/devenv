@@ -7,15 +7,23 @@ A module defines a runtime, associated tools and IDE configuration.
 
 For example, `withPython` results in:
 
-- python38 with packages virtualenv, tox, pip, mypy, black
-- emacs config with flycheck-mypy
+- runtime: python38
+- package manager: pip, tox
+- formatter and linter: black, flake8, mypy
+- emacs config: flycheck-mypy
+- vscode extension: ms-python
 
 `withReason` results in:
 
-- nodejs with packages bs-platform and yarn
-- emacs config with reason-mode and format-all
+- runtime: nodejs
+- package manager: yarn
+- formatter: bsrefmt
+- emacs config: reason-mode
+- vscode extension: reason-vscode
 
-Vim and VSCode are also supported.
+`withLsp` enables language-server protocol extensions.
+
+Vim and PyCharm are also supported.
 
 The goal is to provide the best in class developer experience for PL enthusiast.
 
@@ -41,16 +49,22 @@ mkdir -p ~/src/github.com/podenv/ && nix-shell -p "git" --command "git clone htt
 nix-shell ~/src/github.com/podenv/devenv/
 ```
 
+Use Emacs:
+
+```
+nix-shell --arg withEmacs true
+```
+
+Use ViM:
+
+```
+nix-shell --arg withVim true
+```
+
 Use VSCode:
 
 ```
-NIXPKGS_ALLOW_UNFREE=1 nix-shell --arg withEmacs false --arg withVSCode true
-```
-
-Use VIM:
-
-```
-nix-shell --arg withEmacs false --arg withVim true
+NIXPKGS_ALLOW_UNFREE=1 nix-shell --arg withVSCode true
 ```
 
 ### Add custom module
@@ -86,3 +100,11 @@ See https://nixos.org/ or https://guix.gnu.org/
 ### Configuration
 
 See the [default.nix](./default.nix) entrypoint.
+
+### Contribute
+
+Contribution are most welcome, for example the project needs help to:
+
+- Support more languages.
+- Add Vim configuration.
+- Improve documentation.

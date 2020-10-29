@@ -28,10 +28,7 @@ testOutput name (Command (c, args)) (Expected expected) = do
 shellCommand :: String -> String -> Command
 shellCommand name command = Command ("nix-shell", args)
   where
-    args =
-      ["--arg", "withEmacs", "false"]
-        <> ["--arg", name, "true"]
-        <> ["--command", command]
+    args = ["--arg", name, "true", "--command", command]
 
 tests :: [(String, Command, Expected)]
 tests =

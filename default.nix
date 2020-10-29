@@ -12,7 +12,7 @@
 # base
 withX ? true,
 # editor
-withEmacs ? true, withVSCode ? false, withVim ? false, withPyCharm ? false,
+withEmacs ? false, withVSCode ? false, withVim ? false, withPyCharm ? false,
 # lsp
 withLsp ? false,
 # eye friendly, low-constrat color theme
