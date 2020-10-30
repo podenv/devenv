@@ -31,6 +31,8 @@ withNeuron ? false, withOrg ? false,
 withC ? true, withPython ? true, withHaskell ? false, withNix ? false,
 # conf
 withDhall ? true, withJson ? true, withYaml ? true,
+# packaging
+withRpm ? false,
 # admin
 withAnsible ? false,
 # web
@@ -261,6 +263,10 @@ let
           || withMarkdown;
         name = "prettier";
         buildInputs = [ nixpkgs.nodePackages.prettier ];
+      }
+      {
+        enabled = withRpm;
+        emacsPkgs = epkgs: [ epkgs.rpm-spec-mode ];
       }
       {
         enabled = withDhall;
