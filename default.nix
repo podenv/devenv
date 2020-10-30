@@ -315,12 +315,7 @@ let
       {
         enabled = withLsp;
         emacsConfig = elisp "lsp";
-        emacsPkgs = epkgs: [
-          epkgs.lsp-mode
-          epkgs.lsp-ui
-          epkgs.lsp-ivy
-          epkgs.company-lsp
-        ];
+        emacsPkgs = epkgs: [ epkgs.lsp-mode epkgs.lsp-ui epkgs.lsp-ivy ];
       }
     ]);
 
