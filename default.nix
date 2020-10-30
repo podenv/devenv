@@ -251,6 +251,7 @@ let
       }
       {
         enabled = withJson;
+        emacsPkgs = epkgs: [ epkgs.json-mode ];
         emacsConfig = elisp "json";
       }
       {

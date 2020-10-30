@@ -1,2 +1,3 @@
-(progn
-  (add-hook 'js-mode-hook 'format-all-mode))
+(use-package json-mode
+  :config
+  (add-hook 'json-mode-hook 'format-all-mode))
