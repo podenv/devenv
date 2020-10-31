@@ -438,11 +438,16 @@ let
     ++ (when withVSCode [ vscode ]) ++ (when withPyCharm [ pycharm ])
     ++ (concatModuleList (m: m.buildInputs));
 
+  # share the pinned nixpkgs
+  nixpkgs_src = nixpkgs.fetchFromGitHub
+    (builtins.fromJSON (builtins.readFile ./nixpkgs.json));
+
   shellEnv = nixpkgs.mkShell {
     buildInputs = devenv;
     shellHook = ''
       export FONTCONFIG_FILE=${fonts}
       export LD_LIBRARY_PATH=${nixpkgs.stdenv.cc.cc.lib}/lib/:/run/opengl-driver/lib/
+      export NIX_PATH=nixpkgs=${nixpkgs_src}
     '';
   };
 
