@@ -10,7 +10,7 @@
 
 { nixpkgs ? import ./nixpkgs.nix,
 # base
-withX ? true,
+withX ? true, withNixGLIntel ? false,
 # editor
 withEmacs ? false, withVSCode ? false, withVim ? false, withPyCharm ? false,
 # lsp
@@ -432,10 +432,18 @@ let
   # pycharm
   pycharm = nixpkgs.jetbrains.pycharm-community;
 
+  # openGL
+  nixGL = import (nixpkgs.fetchFromGitHub
+    (builtins.fromJSON (builtins.readFile ./nixGL.json))) {
+      pkgs = nixpkgs;
+      enable32bits = false;
+    };
+
   # devenv derivations collection:
   devenv = (with nixpkgs; [ bash fontconfig hack-font ripgrep man findutils ])
     ++ (when withEmacs [ emacs ]) ++ (when withVim [ vim ])
     ++ (when withVSCode [ vscode ]) ++ (when withPyCharm [ pycharm ])
+    ++ (when withNixGLIntel [ nixGL.nixGLIntel ])
     ++ (concatModuleList (m: m.buildInputs));
 
   # share the pinned nixpkgs
