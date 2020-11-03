@@ -116,6 +116,36 @@ let
                   };
                 })
               ]);
+              daiquiri = (when withGit [
+                (ps.buildPythonPackage rec {
+                  pname = "daiquiri";
+                  version = "2.1.1";
+                  doCheck = false;
+                  buildInputs = [ setuptools_scm ];
+                  propagatedBuildInputs = [ python-json-logger ];
+                  name = "${pname}-${version}";
+                  src = ps.fetchPypi {
+                    inherit pname version;
+                    sha256 =
+                      "1qmank3c217ddiig3xr8ps0mqaydcp0q5a62in9a9g4zf72zjnqd";
+                  };
+                })
+              ]);
+              git-pull-request = (when withGit [
+                (ps.buildPythonPackage rec {
+                  pname = "git-pull-request";
+                  version = "6.0.1";
+                  doCheck = false;
+                  buildInputs = [ setuptools_scm ];
+                  propagatedBuildInputs = [ PyGithub daiquiri attrs ];
+                  name = "${pname}-${version}";
+                  src = ps.fetchPypi {
+                    inherit pname version;
+                    sha256 =
+                      "1465bzbvc1c87xj5n0cvnx2srdgq8kjj461yzwz86lw6fkfc053a";
+                  };
+                })
+              ]);
               typing-extensions = ps.typing-extensions.overridePythonAttrs
                 (old: rec {
                   version = "3.7.4.3";
@@ -139,7 +169,7 @@ let
                 };
               });
               ansible = (when withAnsible [ ps.ansible ]);
-            in git-review ++ ansible
+            in git-review ++ git-pull-request ++ ansible
             ++ [ virtualenv tox pip mypy black flake8 ]))
         ];
         emacsConfig = elisp "python";
