@@ -310,11 +310,11 @@ let
           dhall = import (nixpkgs.fetchFromGitHub {
             owner = "justinwoo";
             repo = "easy-dhall-nix";
-            rev = "3e9101c5dfd69a9fc28fe4998aff378f91bfcb64";
-            sha256 = "1nsn1n4sx4za6jipcid1293rdw8lqgj9097s0khiij3fz0bzhrg9";
+            rev = "aa1dafc30d36bd4609ead0faaee66e44f617f981";
+            sha256 = "0n1ry6785j44kl4zp74vlvj20ik8gqh7zw9pc2g6arhh77vxhhir";
           }) { pkgs = nixpkgs; };
         in (with dhall;
-          [ dhall-simple dhall-json-simple dhall-yaml-simple ]
+          [ dhall-simple dhall-json-simple dhall-yaml-simple dhall-docs-simple ]
           ++ (when withLsp [ dhall-lsp-simple ]));
       }
       {
