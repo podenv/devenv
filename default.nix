@@ -38,7 +38,7 @@ withAnsible ? false,
 # web
 withGraphQL ? false, withCss ? false,
 # text
-withMarkdown ? true, withRestructuredText ? true,
+withMarkdown ? true, withRestructuredText ? true, withPdf ? false,
 # wip language
 withIdris ? false, withOcaml ? false, withReasonNative ? false,
 # javascript language
@@ -321,6 +321,10 @@ let
         enabled = withMarkdown;
         emacsConfig = elisp "markdown";
         emacsPkgs = epkgs: [ epkgs.markdown-mode ];
+      }
+      {
+        enabled = withPdf;
+        emacsPkgs = epkgs: [ epkgs.pdf-tools ];
       }
       {
         enabled = withOrg;
