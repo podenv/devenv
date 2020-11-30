@@ -28,7 +28,8 @@ withGit ? true,
 # notes
 withNeuron ? false, withOrg ? false,
 # language
-withC ? true, withPython ? true, withHaskell ? false, withNix ? false,
+withC ? true, withPython ? true, withHaskell ? false, withErlang ? false
+, withElixir ? false, withNix ? false,
 # conf
 withDhall ? true, withJson ? true, withYaml ? true,
 # packaging
@@ -202,6 +203,17 @@ let
         buildInputs = [ nixpkgs.idris2 ];
         emacsPkgs = epkgs: [ epkgs.idris-mode ];
         emacsConfig = elisp "idris";
+      }
+      {
+        enabled = withErlang || withElixir;
+        buildInputs = [ nixpkgs.erlang nixpkgs.rebar3 ];
+        emacsPkgs = epkgs: [ epkgs.erlang ];
+      }
+      {
+        enabled = withElixir;
+        buildInputs = [ nixpkgs.elixir ];
+        emacsPkgs = epkgs: [ epkgs.elixir-mode ];
+        emacsConfig = elisp "elixir";
       }
       {
         enabled = withHaskell;
