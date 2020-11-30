@@ -474,8 +474,15 @@ let
     };
 
   # devenv derivations collection:
-  devenv = (with nixpkgs; [ bash fontconfig hack-font ripgrep man findutils ])
-    ++ (when withEmacs [ emacs ]) ++ (when withVim [ vim ])
+  devenv = (with nixpkgs; [
+    bash
+    fontconfig
+    hack-font
+    ripgrep
+    man
+    findutils
+    glibcLocales
+  ]) ++ (when withEmacs [ emacs ]) ++ (when withVim [ vim ])
     ++ (when withVSCode [ vscode ]) ++ (when withPyCharm [ pycharm ])
     ++ (when withNixGLIntel [ nixGL.nixGLIntel ])
     ++ (concatModuleList (m: m.buildInputs));
