@@ -23,8 +23,8 @@ withEmacsEvil ? false,
 withCodeVim ? false,
 # faster emacs
 withEmacsGcc ? false,
-# git
-withGit ? true,
+# rcs
+withGit ? true, withDarcs ? false,
 # notes
 withNeuron ? false, withOrg ? false,
 # language
@@ -90,6 +90,10 @@ let
         emacsConfig = elisp "magit";
         emacsPkgs = epkgs: [ epkgs.magit ];
         buildInputs = [ nixpkgs.git ];
+      }
+      {
+        enabled = withDarcs;
+        buildInputs = [ nixpkgs.darcs ];
       }
       {
         enabled = withC;
