@@ -29,7 +29,7 @@ withGit ? true,
 withNeuron ? false, withOrg ? false,
 # language
 withC ? true, withPython ? true, withHaskell ? false, withErlang ? false
-, withElixir ? false, withNix ? false,
+, withElixir ? false, withNix ? false, withAts ? false,
 # conf
 withDhall ? true, withJson ? true, withYaml ? true,
 # packaging
@@ -344,6 +344,11 @@ let
         emacsPkgs = epkgs: [ epkgs.org ];
       }
       {
+        enabled = withAts;
+        buildInputs = [ nixpkgs.ats2 nixpkgs.haskellPackages.ats-format ];
+        emacsConfig = elisp "ats";
+      }
+      {
         enabled = withNeuron;
         buildInputs = [ (import ./neuron.nix { nixpkgs = nixpkgs; }) ];
         emacsPkgs = epkgs:
@@ -509,7 +514,10 @@ let
       export FONTCONFIG_FILE=${fonts}
       export LD_LIBRARY_PATH=${nixpkgs.stdenv.cc.cc.lib}/lib/:/run/opengl-driver/lib/
       export NIX_PATH=nixpkgs=${nixpkgs_src}
-    '';
+    '' + (if withAts then ''
+      export ATS_LOADPATH=${nixpkgs.ats2}/share/emacs/site-lisp/ats2
+    '' else
+      "");
   };
 
 in {
