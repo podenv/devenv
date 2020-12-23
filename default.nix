@@ -37,7 +37,7 @@ withRpm ? false,
 # admin
 withAnsible ? false,
 # web
-withGraphQL ? false, withCss ? false,
+withW3M ? false, withGraphQL ? false, withCss ? false,
 # text
 withMarkdown ? true, withRestructuredText ? true, withPdf ? false,
 # wip language
@@ -94,6 +94,11 @@ let
       {
         enabled = withDarcs;
         buildInputs = [ nixpkgs.darcs ];
+      }
+      {
+        enabled = withW3M;
+        buildInputs = [ nixpkgs.w3m ];
+        emacsPkgs = epkgs: [ epkgs.emacsw3m ];
       }
       {
         enabled = withC;
