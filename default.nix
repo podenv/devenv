@@ -10,7 +10,7 @@
 
 { nixpkgs ? import ./nixpkgs.nix,
 # base
-withX ? true, withNixGLIntel ? false,
+withX ? true, withIntel ? false,
 # editor
 withEmacs ? false, withVSCode ? false, withVim ? false, withPyCharm ? false,
 # lsp
@@ -36,6 +36,8 @@ withDhall ? true, withJson ? true, withYaml ? true,
 withRpm ? false,
 # admin
 withAnsible ? false,
+# gfx
+withOpenGL ? false, withVulkan ? false,
 # web
 withW3M ? false, withGraphQL ? false, withCss ? false,
 # text
@@ -301,6 +303,19 @@ let
         emacsPkgs = epkgs: [ epkgs.tuareg ];
       }
       {
+        enabled = withX && withOpenGL;
+        buildInputs = (when withIntel [ nixGL.nixGLIntel ]);
+      }
+      {
+        enabled = withX && withVulkan;
+        buildInputs = [
+          nixpkgs.vulkan-loader
+          nixpkgs.vulkan-validation-layers
+          nixpkgs.vulkan-headers
+          nixpkgs.vulkan-tools
+        ] ++ (when withIntel [ nixGL.nixVulkanIntel ]);
+      }
+      {
         enabled = withJson;
         emacsPkgs = epkgs: [ epkgs.json-mode ];
         emacsConfig = elisp "json";
@@ -508,9 +523,9 @@ let
     man
     findutils
     glibcLocales
+    pkgconfig
   ]) ++ (when withEmacs [ emacs ]) ++ (when withVim [ vim ])
     ++ (when withVSCode [ vscode ]) ++ (when withPyCharm [ pycharm ])
-    ++ (when withNixGLIntel [ nixGL.nixGLIntel ])
     ++ (concatModuleList (m: m.buildInputs));
 
   # share the pinned nixpkgs
