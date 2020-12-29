@@ -231,15 +231,8 @@ let
         name = "haskell";
         emacsConfig = elisp "haskell";
         emacsPkgs = epkgs: [ epkgs.haskell-mode epkgs.ormolu ];
-        buildInputs = [
-          (nixpkgs.haskellPackages.ghcWithHoogle
-            (hpkgs: with hpkgs; [ aeson simple-cmd ]))
-        ] ++ (with nixpkgs.haskellPackages; [
-          ormolu
-          hlint
-          cabal-install
-          stack
-        ]);
+        buildInputs =
+          (with nixpkgs.haskellPackages; [ ormolu hlint cabal-install stack ]);
       }
       {
         enabled = withPurescript;
