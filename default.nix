@@ -230,7 +230,9 @@ let
         enabled = withHaskell;
         name = "haskell";
         emacsConfig = elisp "haskell";
-        emacsPkgs = epkgs: [ epkgs.haskell-mode epkgs.ormolu ];
+        emacsPkgs = epkgs:
+          [ epkgs.haskell-mode epkgs.ormolu ]
+          ++ (when withLsp [ epkgs.lsp-haskell ]);
         buildInputs =
           (with nixpkgs.haskellPackages; [ ormolu hlint cabal-install stack ]);
       }

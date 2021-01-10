@@ -17,3 +17,6 @@
    haskell-process-log t)
   )
 (use-package ormolu)
+
+(use-package lsp-haskell
+  :requires lsp)
