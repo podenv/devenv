@@ -532,6 +532,7 @@ let
     shellHook = ''
       export FONTCONFIG_FILE=${fonts}
       export LD_LIBRARY_PATH=${nixpkgs.stdenv.cc.cc.lib}/lib/:/run/opengl-driver/lib/
+      export __ETC_PROFILE_NIX_SOURCED=1
       export NIX_PATH=nixpkgs=${nixpkgs_src}
     '' + (if withAts then ''
       export ATS_LOADPATH=${nixpkgs.ats2}/share/emacs/site-lisp/ats2
