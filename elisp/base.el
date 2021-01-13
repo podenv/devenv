@@ -191,8 +191,8 @@
 
 ;; use colors to distinguish parens
 (use-package rainbow-delimiters
-  :commands rainbow-delimiters-mode
-  :hook ((emacs-lisp-mode lisp-mode hy-mode) . rainbow-delimiters-mode))
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 (use-package undo-tree
   :diminish
