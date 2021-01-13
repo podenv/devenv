@@ -30,6 +30,8 @@ withNeuron ? false, withOrg ? false,
 # language
 withC ? true, withPython ? true, withHaskell ? false, withErlang ? false
 , withElixir ? false, withNix ? false, withAts ? false,
+# lisp
+withHy ? false, withRacket ? false,
 # conf
 withDhall ? true, withJson ? true, withYaml ? true,
 # packaging
@@ -106,6 +108,14 @@ let
         enabled = withC;
         buildInputs =
           (with nixpkgs; [ cmake gcc automake autoconf pkg-config ]);
+      }
+      {
+        enabled = withHy;
+        emacsPkgs = epkgs: [ epkgs.hy-mode ];
+      }
+      {
+        enabled = withRacket;
+        emacsPkgs = epkgs: [ epkgs.racket-mode ];
       }
       {
         enabled = withPython;
