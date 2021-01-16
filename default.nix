@@ -47,7 +47,7 @@ withMarkdown ? true, withRestructuredText ? true, withPdf ? false,
 # wip language
 withIdris ? false, withOcaml ? false, withReasonNative ? false,
 # javascript language
-withReason ? true, withPurescript ? false,
+withReason ? false, withPurescript ? false,
 # minimal override
 minimal ? false, }:
 
