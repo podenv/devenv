@@ -1,7 +1,7 @@
 (use-package haskell-mode
   :config
   ;; ensure run-haskell uses the simplest ghci subprocess
-  (setq-default haskell-process-type 'ghci)
+  (setq-default haskell-process-type 'auto)
   (add-hook 'haskell-mode-hook 'ormolu-format-on-save-mode)
   (add-hook 'haskell-mode-hook 'haskell-auto-insert-module-template)
   ;; configure interactive mode
@@ -20,3 +20,9 @@
 
 (use-package lsp-haskell
   :requires lsp)
+
+(setq lsp-haskell-server-wrapper-function
+      (lambda (argv)
+        (append (list "nix-shell" "-I" (lsp-haskell--get-root) "--command")
+                (list (mapconcat 'identity argv " ")))
+        ))
