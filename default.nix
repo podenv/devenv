@@ -347,6 +347,21 @@ let
         emacsPkgs = epkgs: [ epkgs.dhall-mode ];
         vimConfig = "let g:dhall_format=1";
         vimPkgs = vpkgs: [ vpkgs.dhall-vim ];
+        vscodeExtensions = vsext:
+          (nixpkgs.vscode-utils.extensionsFromVscodeMarketplace [
+            {
+              name = "dhall-lang";
+              publisher = "dhall";
+              version = "0.0.4";
+              sha256 = "0sa04srhqmngmw71slnrapi2xay0arj42j4gkan8i11n7bfi1xpf";
+            }
+            {
+              name = "vscode-dhall-lsp-server";
+              publisher = "dhall";
+              version = "0.0.4";
+              sha256 = "1zin7s827bpf9yvzpxpr5n6mv0b5rhh3civsqzmj52mdq365d2js";
+            }
+          ]);
         buildInputs = let
           dhall = import (nixpkgs.fetchFromGitHub {
             owner = "justinwoo";
