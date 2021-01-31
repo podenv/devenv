@@ -29,7 +29,7 @@ withGit ? true, withDarcs ? false,
 withNeuron ? false, withOrg ? false,
 # language
 withC ? true, withPython ? true, withHaskell ? false, withErlang ? false
-, withElixir ? false, withNix ? false, withAts ? false,
+, withElixir ? false, withNix ? false, withAts ? false, withGLSL ? false,
 # lisp
 withHy ? false, withRacket ? false,
 # conf
@@ -391,6 +391,10 @@ let
         enabled = withAts;
         buildInputs = [ nixpkgs.ats2 nixpkgs.haskellPackages.ats-format ];
         emacsConfig = elisp "ats";
+      }
+      {
+        enabled = withGLSL;
+        emacsPkgs = epkgs: [ epkgs.glsl-mode ];
       }
       {
         enabled = withNeuron;
