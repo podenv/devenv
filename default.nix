@@ -262,8 +262,7 @@ let
       {
         name = "nodejs";
         enabled = withReason;
-        buildInputs =
-          [ nixpkgs.nodejs nixpkgs.yarn nixpkgs.nodePackages.parcel-bundler ];
+        buildInputs = [ nixpkgs.nodejs nixpkgs.nodePackages.pnpm ];
       }
       {
         enabled = withReason;
