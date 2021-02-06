@@ -446,14 +446,14 @@ let
       language-id-src = nixpkgs.fetchFromGitHub {
         owner = "lassik";
         repo = "emacs-language-id";
-        rev = "4bfda9f6351f8327024551c20fe882384941214b";
-        sha256 = "0gh1zn767gxs0dkl04yrcwldfkalf24azj9bhd3xb3bc1m8xlqsr";
+        rev = "89003d4e4e738606438ba4c01f3542fb3dd32d36";
+        sha256 = "0i6d93bjvs8jrifmd9j84a5il351a80ivna57884hhw9bvr6vwd0";
       };
       format-all-src = nixpkgs.fetchFromGitHub {
         owner = "lassik";
         repo = "emacs-format-all-the-code";
-        rev = "361178827723cb11ca774431c938c27894a08e13";
-        sha256 = "0dli6kg68hh2w0amfw51f50g6za7qavg33nmxlf8m9q9f5c1fs0h";
+        rev = "02820f32055bca4e789fd7735ab32519dfca83fd";
+        sha256 = "0441y4nrjlqhyc1aqn1lxqxh3c9kkasgc7ahsi8wvfgnjyjxr1lz";
       };
       language-id = (epkgs.melpaBuild {
         pname = "language-id";
@@ -472,6 +472,19 @@ let
           (format-all :repo "lassik/emacs-format-all-the-code" :fetcher github :files ("*.el"))
         '';
       });
+      inheritenv = (epkgs.melpaBuild {
+        pname = "inheritenv";
+        version = "0.1";
+        src = nixpkgs.fetchFromGitHub {
+          owner = "purcell";
+          repo = "inheritenv";
+          rev = "0.1";
+          sha256 = "0ygzf70vfb7qwpsllcq5i3brprsnx3sxy2zng02mzwrr5jkx4ypc";
+        };
+        recipe = nixpkgs.writeText "recipe" ''
+          (inheritenv :repo "purcell/inheritenv" :fetcher github :files ("*.el"))
+        '';
+      });
       ivy = [
         epkgs.smex
         epkgs.ivy
@@ -480,7 +493,7 @@ let
         epkgs.company
         epkgs.projectile
       ];
-      prog = [ epkgs.flycheck format-all ];
+      prog = [ epkgs.flycheck format-all inheritenv ];
       base = [
         (nixpkgs.runCommand "default.el" { } ''
           mkdir -p $out/share/emacs/site-lisp
