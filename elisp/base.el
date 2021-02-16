@@ -155,7 +155,8 @@
 (use-package comint
   :defer t
   :config
-  (setq comint-buffer-maximum-size 32768))
+  (setq comint-buffer-maximum-size 32768)
+  (setq comint-input-ignoredups t))
 
 (use-package subword
   :diminish
