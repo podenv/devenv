@@ -243,8 +243,25 @@ let
         emacsPkgs = epkgs:
           [ epkgs.haskell-mode epkgs.ormolu ]
           ++ (when withLsp [ epkgs.lsp-haskell ]);
+        vscodeExtensions = vsext:
+          (nixpkgs.vscode-utils.extensionsFromVscodeMarketplace [
+            {
+              name = "haskell";
+              publisher = "haskell";
+              version = "1.2.0";
+              sha256 = "0vxsn4s27n1aqp5pp4cipv804c9cwd7d9677chxl0v18j8bf7zly";
+            }
+            {
+              name = "language-haskell";
+              publisher = "justusadam";
+              version = "3.4.0";
+              sha256 = "0ab7m5jzxakjxaiwmg0jcck53vnn183589bbxh3iiylkpicrv67y";
+            }
+          ]);
         buildInputs =
-          (with nixpkgs.haskellPackages; [ ormolu hlint cabal-install stack ]);
+          (with nixpkgs.haskellPackages; [ ormolu hlint cabal-install stack ])
+          ++ (when withVSCode
+            [ nixpkgs.haskellPackages.haskell-language-server ]);
       }
       {
         enabled = withPurescript;
