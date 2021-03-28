@@ -27,6 +27,8 @@ withEmacsGcc ? false,
 withGit ? true, withDarcs ? false,
 # notes
 withNeuron ? false, withOrg ? false,
+# mails
+withNotMuch ? false,
 # language
 withC ? true, withPython ? true, withHaskell ? false, withErlang ? false
 , withElixir ? false, withNix ? false, withAts ? false, withGLSL ? false,
@@ -191,7 +193,8 @@ let
                 };
               });
               ansible = (when withAnsible [ ps.ansible ]);
-            in git-review ++ git-pull-request ++ ansible
+              notmuch = (when withNotMuch [ ps.notmuch ]);
+            in git-review ++ git-pull-request ++ ansible ++ notmuch
             ++ [ virtualenv tox pip mypy black flake8 ]))
         ];
         emacsConfig = elisp "python";
@@ -401,7 +404,7 @@ let
       {
         enabled = withOrg;
         emacsConfig = elisp "org";
-        emacsPkgs = epkgs: [ epkgs.org ];
+        emacsPkgs = epkgs: [ epkgs.org epkgs.org-plus-contrib ];
       }
       {
         enabled = withAts;
@@ -411,6 +414,27 @@ let
       {
         enabled = withGLSL;
         emacsPkgs = epkgs: [ epkgs.glsl-mode ];
+      }
+      {
+        enabled = withNotMuch;
+        buildInputs = with nixpkgs; [ notmuch msmtp dovecot_pigeonhole isync ];
+        emacsPkgs = epkgs:
+          [
+            (epkgs.melpaBuild {
+              pname = "notmuch";
+              src = nixpkgs.notmuch.src;
+              version = nixpkgs.notmuch.version;
+              nativeBuildInputs = [ nixpkgs.pkg-config ];
+              buildInputs = nixpkgs.notmuch.buildInputs;
+              patches = [
+                ./patches/0001-wip-add-notmuch-progressive-search-custom.patch
+              ];
+              recipe = nixpkgs.writeText "recipe" ''
+                (notmuch :url "https://git.notmuchmail.org/git/notmuch" :fetcher git :files ("emacs/*.el" "emacs/*.png"))
+              '';
+
+            })
+          ];
       }
       {
         enabled = withNeuron;
