@@ -31,7 +31,8 @@ withNeuron ? false, withOrg ? false,
 withNotMuch ? false,
 # language
 withC ? true, withPython ? true, withHaskell ? false, withErlang ? false
-, withElixir ? false, withNix ? false, withAts ? false, withGLSL ? false,
+, withElixir ? false, withNix ? false, withAts ? false, withGLSL ? false
+, withGo ? false,
 # lisp
 withHy ? false, withRacket ? false,
 # conf
@@ -114,6 +115,11 @@ let
       {
         enabled = withHy;
         emacsPkgs = epkgs: [ epkgs.hy-mode ];
+      }
+      {
+        enabled = withGo;
+        buildInputs = [ nixpkgs.go ];
+        emacsPkgs = epkgs: [ epkgs.go-mode ];
       }
       {
         enabled = withRacket;
@@ -601,6 +607,8 @@ let
     findutils
     glibcLocales
     pkgconfig
+    systemd
+    openssl
   ]) ++ (when withEmacs [ emacs ]) ++ (when withVim [ vim ])
     ++ (when withVSCode [ vscode ]) ++ (when withPyCharm [ pycharm ])
     ++ (concatModuleList (m: m.buildInputs));
