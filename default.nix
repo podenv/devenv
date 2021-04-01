@@ -95,8 +95,16 @@ let
         name = "git";
         minimal = true;
         emacsConfig = elisp "magit";
-        emacsPkgs = epkgs: [ epkgs.magit ];
-        buildInputs = [ nixpkgs.git ];
+        emacsPkgs = epkgs: [
+          epkgs.magit
+          (import ./emacs-mpr.nix {
+            trivialBuild = epkgs.trivialBuild;
+            magit = epkgs.magit;
+            hub = nixpkgs.gitAndTools.hub;
+            fetchgit = nixpkgs.fetchgit;
+          })
+        ];
+        buildInputs = [ nixpkgs.git nixpkgs.gitAndTools.hub ];
       }
       {
         enabled = withDarcs;
