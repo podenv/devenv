@@ -209,7 +209,7 @@ let
               ansible = (when withAnsible [ ps.ansible ]);
               notmuch = (when withNotMuch [ ps.notmuch ]);
             in git-review ++ git-pull-request ++ ansible ++ notmuch
-            ++ [ virtualenv tox pip mypy black flake8 ]))
+            ++ [ virtualenv tox pip mypy black flake8 pyyaml ]))
         ];
         emacsConfig = elisp "python";
         emacsPkgs = epkgs: [ epkgs.flycheck-mypy ];
