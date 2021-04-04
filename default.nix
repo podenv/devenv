@@ -13,6 +13,8 @@
 withX ? true, withIntel ? false,
 # editor
 withEmacs ? false, withVSCode ? false, withVim ? false, withPyCharm ? false,
+# build
+withShake ? false,
 # lsp
 withLsp ? false,
 # eye friendly, low-constrat color theme
@@ -105,6 +107,10 @@ let
           })
         ];
         buildInputs = [ nixpkgs.git nixpkgs.gitAndTools.hub ];
+      }
+      {
+        enabled = withShake;
+        buildInputs = [ nixpkgs.haskellPackages.shake ];
       }
       {
         enabled = withDarcs;
