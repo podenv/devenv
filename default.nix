@@ -489,7 +489,7 @@ let
 
   # the fonts
   fonts = nixpkgs.makeFontsConf {
-    fontDirectories = [ nixpkgs.hack-font nixpkgs.noto-fonts-emoji ];
+    fontDirectories = [ nixpkgs.iosevka nixpkgs.noto-fonts-emoji ];
   };
 
   # the emacs derivation

@@ -93,7 +93,7 @@
   ;; set font
   (when (display-graphic-p)
     (progn
-      (set-frame-font "Hack 9")
+      (set-frame-font "Iosevka Extended")
       (set-fontset-font t '(#x1f300 . #x1fad0) "Noto Color Emoji")))
   (setq-default   ;; Select in primary selection, not clipboard
    select-enable-primary t
