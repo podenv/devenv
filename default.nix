@@ -10,7 +10,7 @@
 
 { nixpkgs ? import ./nixpkgs.nix,
 # base
-withX ? true, withIntel ? false,
+withTools ? false, withX ? true, withIntel ? false,
 # editor
 withEmacs ? false, withVSCode ? false, withVim ? false, withPyCharm ? false,
 # build
@@ -106,7 +106,12 @@ let
             fetchgit = nixpkgs.fetchgit;
           })
         ];
-        buildInputs = [ nixpkgs.git nixpkgs.gitAndTools.hub ];
+        buildInputs = [ nixpkgs.openssh nixpkgs.git nixpkgs.gitAndTools.hub ];
+      }
+      {
+        enabled = withTools;
+        buildInputs =
+          [ nixpkgs.which nixpkgs.procps nixpkgs.iproute nixpkgs.coreutils ];
       }
       {
         enabled = withShake;
