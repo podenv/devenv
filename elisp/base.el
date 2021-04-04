@@ -91,7 +91,10 @@
   ;; do not create lockfile
   (setq create-lockfiles nil)
   ;; set font
-  (set-frame-font "Hack 9")
+  (when (display-graphic-p)
+    (progn
+      (set-frame-font "Hack 9")
+      (set-fontset-font t '(#x1f300 . #x1fad0) "Noto Color Emoji")))
   (setq-default   ;; Select in primary selection, not clipboard
    select-enable-primary t
    select-enable-clipboard nil

@@ -488,7 +488,9 @@ let
   concatModuleList = f: builtins.concatLists (map f modules);
 
   # the fonts
-  fonts = nixpkgs.makeFontsConf { fontDirectories = [ nixpkgs.hack-font ]; };
+  fonts = nixpkgs.makeFontsConf {
+    fontDirectories = [ nixpkgs.hack-font nixpkgs.noto-fonts-emoji ];
+  };
 
   # the emacs derivation
   emacs-overlay = import (nixpkgs.fetchFromGitHub {
@@ -639,14 +641,16 @@ let
   shellEnv = nixpkgs.mkShell {
     buildInputs = devenv;
     shellHook = ''
-      export FONTCONFIG_FILE=${fonts}
       export LD_LIBRARY_PATH=${nixpkgs.stdenv.cc.cc.lib}/lib/:/run/opengl-driver/lib/
       export __ETC_PROFILE_NIX_SOURCED=1
       export NIX_PATH=nixpkgs=${nixpkgs_src}
     '' + (if withAts then ''
       export ATS_LOADPATH=${nixpkgs.ats2}/share/emacs/site-lisp/ats2
     '' else
-      "");
+      "") + (if withX then ''
+        export FONTCONFIG_FILE=${fonts}
+      '' else
+        "");
   };
 
 in {
