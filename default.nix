@@ -91,6 +91,7 @@ let
         url = "https://en.wikipedia.org/wiki/Solarized_(color_scheme)";
         emacsConfig = elisp "solarized";
         emacsPkgs = epkgs: [ epkgs.solarized-theme ];
+        buildInputs = [ nixpkgs.xorg.xprop ];
       }
       {
         enabled = withGit;
