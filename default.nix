@@ -112,7 +112,7 @@ let
       {
         enabled = withTools;
         buildInputs =
-          [ nixpkgs.which nixpkgs.procps nixpkgs.iproute nixpkgs.coreutils ];
+          [ nixpkgs.which nixpkgs.procps nixpkgs.iproute nixpkgs.coreutils nixpkgs.rsync ];
       }
       {
         enabled = withShake;
