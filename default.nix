@@ -34,11 +34,13 @@ withNotMuch ? false,
 # language
 withC ? true, withPython ? true, withHaskell ? false, withErlang ? false
 , withElixir ? false, withNix ? false, withAts ? false, withGLSL ? false
-, withGo ? false,
+, withGo ? false, withTypescript ? false,
 # lisp
 withHy ? false, withRacket ? false,
 # conf
 withDhall ? true, withJson ? true, withYaml ? true,
+# idl
+withProtobuf ? false, withThrift ? false,
 # packaging
 withRpm ? false,
 # admin
@@ -111,8 +113,13 @@ let
       }
       {
         enabled = withTools;
-        buildInputs =
-          [ nixpkgs.which nixpkgs.procps nixpkgs.iproute nixpkgs.coreutils nixpkgs.rsync ];
+        buildInputs = [
+          nixpkgs.which
+          nixpkgs.procps
+          nixpkgs.iproute
+          nixpkgs.coreutils
+          nixpkgs.rsync
+        ];
       }
       {
         enabled = withShake;
@@ -333,6 +340,10 @@ let
           ]);
       }
       {
+        enabled = withTypescript;
+        emacsPkgs = epkgs: [ epkgs.typescript-mode ];
+      }
+      {
         enabled = !withEmacsEvil;
         emacsPkgs = epkgs: [ epkgs.anzu ];
         emacsConfig = elisp "anzu";
@@ -417,6 +428,14 @@ let
         in (with dhall;
           [ dhall-simple dhall-json-simple dhall-yaml-simple dhall-docs-simple ]
           ++ (when withLsp [ dhall-lsp-simple ]));
+      }
+      {
+        enabled = withProtobuf;
+        emacsPkgs = epkgs: [ epkgs.protobuf-mode ];
+      }
+      {
+        enabled = withThrift;
+        emacsPkgs = epkgs: [ epkgs.thrift ];
       }
       {
         enabled = withMarkdown;
