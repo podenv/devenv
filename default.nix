@@ -40,7 +40,7 @@ withHy ? false, withRacket ? false,
 # conf
 withDhall ? true, withJson ? true, withYaml ? true,
 # idl
-withProtobuf ? false, withThrift ? false,
+withPlantuml ? false, withProtobuf ? false, withThrift ? false,
 # packaging
 withRpm ? false,
 # admin
@@ -434,13 +434,19 @@ let
         emacsPkgs = epkgs: [ epkgs.protobuf-mode ];
       }
       {
+        enabled = withPlantuml;
+        buildInputs = [ nixpkgs.plantuml nixpkgs.openjdk nixpkgs.graphviz ];
+        emacsPkgs = epkgs: [ epkgs.plantuml-mode ];
+      }
+      {
         enabled = withThrift;
         emacsPkgs = epkgs: [ epkgs.thrift ];
       }
       {
         enabled = withMarkdown;
         emacsConfig = elisp "markdown";
-        emacsPkgs = epkgs: [ epkgs.markdown-mode ];
+        emacsPkgs = epkgs:
+          [ epkgs.markdown-mode ] ++ (when withOrg [ epkgs.ox-gfm ]);
       }
       {
         enabled = withPdf;
