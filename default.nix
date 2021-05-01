@@ -41,6 +41,8 @@ withHy ? false, withRacket ? false,
 withDhall ? true, withJson ? true, withYaml ? true,
 # idl
 withPlantuml ? false, withProtobuf ? false, withThrift ? false,
+# network
+withRest ? false,
 # packaging
 withRpm ? false,
 # admin
@@ -432,6 +434,10 @@ let
       {
         enabled = withProtobuf;
         emacsPkgs = epkgs: [ epkgs.protobuf-mode ];
+      }
+      {
+        enabled = withRest;
+        emacsPkgs = epkgs: [ epkgs.restclient ];
       }
       {
         enabled = withPlantuml;
