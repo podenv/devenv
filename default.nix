@@ -296,10 +296,14 @@ let
               sha256 = "0ab7m5jzxakjxaiwmg0jcck53vnn183589bbxh3iiylkpicrv67y";
             }
           ]);
-        buildInputs =
-          (with nixpkgs.haskellPackages; [ ormolu hlint cabal-install stack ])
-          ++ (when withVSCode
-            [ nixpkgs.haskellPackages.haskell-language-server ]);
+        buildInputs = (with nixpkgs.haskellPackages; [
+          ormolu
+          hlint
+          cabal-install
+          stack
+          hasktags
+        ]) ++ (when withVSCode
+          [ nixpkgs.haskellPackages.haskell-language-server ]);
       }
       {
         enabled = withPurescript;
