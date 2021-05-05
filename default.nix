@@ -441,7 +441,9 @@ let
       }
       {
         enabled = withRest;
-        emacsPkgs = epkgs: [ epkgs.restclient ];
+        emacsConfig = if withOrg then elisp "ob-restclient" else "";
+        emacsPkgs = epkgs:
+          [ epkgs.restclient ] ++ (when withOrg [ epkgs.ob-restclient ]);
       }
       {
         enabled = withPlantuml;
