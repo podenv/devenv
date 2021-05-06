@@ -102,15 +102,7 @@ let
         name = "git";
         minimal = true;
         emacsConfig = elisp "magit";
-        emacsPkgs = epkgs: [
-          epkgs.magit
-          (import ./emacs-mpr.nix {
-            trivialBuild = epkgs.trivialBuild;
-            magit = epkgs.magit;
-            hub = nixpkgs.gitAndTools.hub;
-            fetchgit = nixpkgs.fetchgit;
-          })
-        ];
+        emacsPkgs = epkgs: [ epkgs.magit epkgs.forge epkgs.ghub ];
         buildInputs = [ nixpkgs.openssh nixpkgs.git nixpkgs.gitAndTools.hub ];
       }
       {
