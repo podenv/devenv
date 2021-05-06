@@ -95,3 +95,5 @@
   :diminish
   :config
   (global-company-mode 1))
+
+(use-package bufler)
