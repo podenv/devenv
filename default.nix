@@ -376,7 +376,8 @@ let
       }
       {
         enabled = withJson;
-        emacsPkgs = epkgs: [ epkgs.json-mode ];
+        buildInputs = [ nixpkgs.jq ];
+        emacsPkgs = epkgs: [ epkgs.json-mode epkgs.counsel-jq ];
         emacsConfig = elisp "json";
       }
       {
