@@ -537,6 +537,7 @@ let
     (let
       # the emacs config:
       emacsSite = nixpkgs.writeText "default.el" ((elisp "base")
+        + (elisp "base-extra") + (elisp "format-all")
         + (concatModuleText (m: m.emacsConfig)) + ''
           ;; reset gc to reasonable level
           (setq gc-cons-threshold (* 20 1024 1024))'');
