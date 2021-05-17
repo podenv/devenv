@@ -386,6 +386,10 @@ let
         emacsPkgs = epkgs: [ epkgs.yaml-mode ];
       }
       {
+        enabled = withGraphQL;
+        emacsPkgs = epkgs: [ epkgs.graphql-mode ];
+      }
+      {
         enabled = withJson || withYaml || withGraphQL || withCss
           || withMarkdown;
         name = "prettier";
