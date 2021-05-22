@@ -666,6 +666,7 @@ let
     glibcLocales
     pkgconfig
     systemd
+    libnotify
     openssl
   ]) ++ (when withEmacs [ emacs ]) ++ (when withVim [ vim ])
     ++ (when withVSCode [ vscode ]) ++ (when withPyCharm [ pycharm ])
