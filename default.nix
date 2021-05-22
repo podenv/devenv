@@ -303,10 +303,10 @@ let
           purescript = import (nixpkgs.fetchFromGitHub {
             owner = "justinwoo";
             repo = "easy-purescript-nix";
-            rev = "9b56211db78efc447abf26c39d6968e8b03924e0";
-            sha256 = "1xkbvcjx5qyz5z7qjampxnhpvvg5grv5ikqpjr1glrfs1lvjff49";
+            rev = "fbbb27c1afd51d729939a6a2006e954dbd844846";
+            sha256 = "1kw9cqycrq456dipd5mq7c1ij6jl3d9ajlnba152db3qrw5wmrg0";
           }) { pkgs = nixpkgs; };
-        in (with purescript; [ spago purs purty zephyr ]);
+        in (with purescript; [ spago purs zephyr ]);
         emacsConfig = elisp "purescript";
         emacsPkgs = epkgs: [ epkgs.purescript-mode epkgs.psci epkgs.psc-ide ];
       }
