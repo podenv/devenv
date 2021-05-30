@@ -34,7 +34,7 @@ withNotMuch ? false,
 # language
 withC ? true, withPython ? true, withHaskell ? false, withErlang ? false
 , withElixir ? false, withNix ? false, withAts ? false, withGLSL ? false
-, withGo ? false, withTypescript ? false,
+, withGo ? false, withTypescript ? false, withRust ? false,
 # lisp
 withHy ? false, withRacket ? false,
 # conf
@@ -288,14 +288,30 @@ let
               sha256 = "0ab7m5jzxakjxaiwmg0jcck53vnn183589bbxh3iiylkpicrv67y";
             }
           ]);
-        buildInputs = (with nixpkgs.haskellPackages; [
+        buildInputs = let
+          easy-hls-src = nixpkgs.fetchFromGitHub {
+            owner = "jkachmar";
+            repo = "easy-hls-nix";
+            rev = "291cf77f512a7121bb6801cde35ee1e8b7287f91";
+            sha256 = "1bvbcp9zwmh53sm16ycp8phhc6vzc72a71sf0bvyjgfbn6zp68bc";
+          };
+          easy-hls =
+            nixpkgs.callPackage easy-hls-src { ghcVersions = [ "8.10.4" ]; };
+        in (with nixpkgs.haskellPackages; [
           ormolu
           hlint
           cabal-install
           stack
           hasktags
-        ]) ++ (when withVSCode
-          [ nixpkgs.haskellPackages.haskell-language-server ]);
+        ])
+        ++ (when withVSCode [ nixpkgs.haskellPackages.haskell-language-server ])
+        ++ (when withLsp [ easy-hls ]);
+      }
+      {
+        enabled = withRust;
+        name = "rust";
+        emacsPkgs = epkgs: [ epkgs.rust-mode ];
+        buildInputs = [ nixpkgs.cargo nixpkgs.rustc ];
       }
       {
         enabled = withPurescript;
