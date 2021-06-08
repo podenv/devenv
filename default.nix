@@ -566,14 +566,14 @@ let
       language-id-src = nixpkgs.fetchFromGitHub {
         owner = "lassik";
         repo = "emacs-language-id";
-        rev = "89003d4e4e738606438ba4c01f3542fb3dd32d36";
-        sha256 = "0i6d93bjvs8jrifmd9j84a5il351a80ivna57884hhw9bvr6vwd0";
+        rev = "30a5bc267af7de167d0a835ead828016e6e7e14c";
+        sha256 = "1wkppwh72zs8b4jqdxqpf3gikh11la03nkj8nna9bg7k8n0a4vaq";
       };
       format-all-src = nixpkgs.fetchFromGitHub {
         owner = "lassik";
         repo = "emacs-format-all-the-code";
-        rev = "02820f32055bca4e789fd7735ab32519dfca83fd";
-        sha256 = "0441y4nrjlqhyc1aqn1lxqxh3c9kkasgc7ahsi8wvfgnjyjxr1lz";
+        rev = "351057f7efde71dcd4b6c5eadcbcfcd8d53d2a47";
+        sha256 = "1cicxsckmqh8zmad0dggsnvk72j37kdsyv0z5266ri7kb184awb4";
       };
       language-id = (epkgs.melpaBuild {
         pname = "language-id";
