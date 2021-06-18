@@ -292,8 +292,8 @@ let
           easy-hls-src = nixpkgs.fetchFromGitHub {
             owner = "jkachmar";
             repo = "easy-hls-nix";
-            rev = "291cf77f512a7121bb6801cde35ee1e8b7287f91";
-            sha256 = "1bvbcp9zwmh53sm16ycp8phhc6vzc72a71sf0bvyjgfbn6zp68bc";
+            rev = "9d64543a015563942c954b89addc1108800ed134";
+            sha256 = "1szq3g34dv22fqzil549mvpdd1865s64vqnfxj0l2aw9ha32jxyz";
           };
           easy-hls =
             nixpkgs.callPackage easy-hls-src { ghcVersions = [ "8.10.4" ]; };
