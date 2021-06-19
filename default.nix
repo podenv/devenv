@@ -303,6 +303,7 @@ let
           cabal-install
           stack
           hasktags
+          ghc
         ])
         ++ (when withVSCode [ nixpkgs.haskellPackages.haskell-language-server ])
         ++ (when withLsp [ easy-hls ]);
