@@ -554,7 +554,19 @@ let
 
   emacsDrv = if withEmacsGcc then emacs-overlay.emacsGcc else nixpkgs.emacs;
 
-  emacs = (nixpkgs.emacsPackagesGen emacsDrv).emacsWithPackages (epkgs:
+  emacsOverride = self: super: {
+    spinner = super.spinner.override {
+      elpaBuild = args: super.elpaBuild (args // {
+        version = "1.7.4";
+        src = nixpkgs.fetchurl {
+          url = "https://elpa.gnu.org/packages/spinner-1.7.4.tar";
+          sha256 = "140kss25ijbwf8hzflbjz67ry76w2cyrh02axk95n6qcxv7jr7pv";
+        };
+      });
+    };
+  };
+
+  emacs = ((nixpkgs.emacsPackagesGen emacsDrv).overrideScope' emacsOverride).emacsWithPackages (epkgs:
     (let
       # the emacs config:
       emacsSite = nixpkgs.writeText "default.el" ((elisp "base")
