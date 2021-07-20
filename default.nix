@@ -631,6 +631,9 @@ let
         epkgs.diminish
         epkgs.ripgrep
         epkgs.bufler
+        epkgs.ace-window
+        epkgs.ace-link
+        epkgs.avy
       ] ++ ivy ++ prog;
     in base ++ (concatModuleList (m: m.emacsPkgs epkgs))));
 
