@@ -359,9 +359,9 @@ let
         emacsPkgs = epkgs: [ epkgs.typescript-mode ];
       }
       {
-        enabled = !withEmacsEvil;
-        emacsPkgs = epkgs: [ epkgs.anzu ];
-        emacsConfig = elisp "anzu";
+        enabled = withEmacsEvil;
+        emacsPkgs = epkgs: [ epkgs.evil ];
+        emacsConfig = elisp "evil";
       }
       {
         enabled = withReasonNative;
@@ -633,6 +633,7 @@ let
           cp ${emacsSite} $out/share/emacs/site-lisp/default.el
         '')
         epkgs.use-package
+        epkgs.anzu
         epkgs.rainbow-delimiters
         epkgs.undo-tree
         epkgs.diff-hl

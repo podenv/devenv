@@ -97,3 +97,9 @@
   (global-company-mode 1))
 
 (use-package bufler)
+
+;; visual replace feedback
+(use-package anzu
+  :diminish
+  :config
+  (global-anzu-mode 1))
