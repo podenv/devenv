@@ -1,17 +1,17 @@
-{ nixpkgs ? import ./nixpkgs.nix }:
+{ pkgs ? import ./nixpkgs.nix }:
 
-nixpkgs.stdenv.mkDerivation rec {
+pkgs.stdenv.mkDerivation rec {
   pname = "reason-language-server";
 
   version = "1.7.13";
 
-  src = nixpkgs.fetchurl {
+  src = pkgs.fetchurl {
     url =
       "https://github.com/jaredly/reason-language-server/releases/download/${version}/rls-linux.zip";
     sha256 = "1g6xd0nclhi5qn0x983l8vza3wmn237lc3swffhnv1iylbrhr5mm";
   };
 
-  buildInputs = [ nixpkgs.unzip ];
+  buildInputs = [ pkgs.unzip ];
 
   dontStrip = true;
 

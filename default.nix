@@ -8,7 +8,7 @@
       nix-env -f "<nixpkgs>" -qaP -A emacsPackages.orgPackages
 */
 
-{ nixpkgs ? import ./nixpkgs.nix,
+{ pkgs ? import ./nixpkgs.nix,
 # base
 withTools ? false, withX ? true, withIntel ? false,
 # editor
@@ -95,7 +95,7 @@ let
         url = "https://en.wikipedia.org/wiki/Solarized_(color_scheme)";
         emacsConfig = elisp "solarized";
         emacsPkgs = epkgs: [ epkgs.solarized-theme ];
-        buildInputs = [ nixpkgs.xorg.xprop ];
+        buildInputs = [ pkgs.xorg.xprop ];
       }
       {
         enabled = withGit;
@@ -103,35 +103,35 @@ let
         minimal = true;
         emacsConfig = elisp "magit";
         emacsPkgs = epkgs: [ epkgs.magit epkgs.forge epkgs.ghub ];
-        buildInputs = [ nixpkgs.openssh nixpkgs.git nixpkgs.gitAndTools.hub ];
+        buildInputs = [ pkgs.openssh pkgs.git pkgs.gitAndTools.hub ];
       }
       {
         enabled = withTools;
         buildInputs = [
-          nixpkgs.which
-          nixpkgs.procps
-          nixpkgs.iproute
-          nixpkgs.coreutils
-          nixpkgs.rsync
+          pkgs.which
+          pkgs.procps
+          pkgs.iproute
+          pkgs.coreutils
+          pkgs.rsync
         ];
       }
       {
         enabled = withShake;
-        buildInputs = [ nixpkgs.haskellPackages.shake ];
+        buildInputs = [ pkgs.haskellPackages.shake ];
       }
       {
         enabled = withDarcs;
-        buildInputs = [ nixpkgs.darcs ];
+        buildInputs = [ pkgs.darcs ];
       }
       {
         enabled = withW3M;
-        buildInputs = [ nixpkgs.w3m ];
+        buildInputs = [ pkgs.w3m ];
         emacsPkgs = epkgs: [ epkgs.emacsw3m ];
       }
       {
         enabled = withC;
         buildInputs =
-          (with nixpkgs; [ cmake gcc automake autoconf pkg-config ]);
+          (with pkgs; [ cmake gcc automake autoconf pkg-config ]);
       }
       {
         enabled = withHy;
@@ -139,7 +139,7 @@ let
       }
       {
         enabled = withGo;
-        buildInputs = [ nixpkgs.go ];
+        buildInputs = [ pkgs.go ];
         emacsPkgs = epkgs: [ epkgs.go-mode ];
       }
       {
@@ -150,7 +150,7 @@ let
         enabled = withPython;
         minimal = true;
         buildInputs = [
-          (nixpkgs.python38.withPackages (ps:
+          (pkgs.python38.withPackages (ps:
             with ps;
             let
               git-review = (when withGit [
@@ -230,11 +230,11 @@ let
       }
       {
         enabled = withNix;
-        buildInputs = [ nixpkgs.nixfmt ];
+        buildInputs = [ pkgs.nixfmt ];
         emacsPkgs = epkgs: [ epkgs.nix-mode ];
         emacsConfig = elisp "nix";
         vscodeExtensions = vsext:
-          (nixpkgs.vscode-utils.extensionsFromVscodeMarketplace [
+          (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
             {
               name = "nix";
               publisher = "bbenoist";
@@ -251,18 +251,18 @@ let
       }
       {
         enabled = withIdris;
-        buildInputs = [ nixpkgs.idris2 ];
+        buildInputs = [ pkgs.idris2 ];
         emacsPkgs = epkgs: [ epkgs.idris-mode ];
         emacsConfig = elisp "idris";
       }
       {
         enabled = withErlang || withElixir;
-        buildInputs = [ nixpkgs.erlang nixpkgs.rebar3 ];
+        buildInputs = [ pkgs.erlang pkgs.rebar3 ];
         emacsPkgs = epkgs: [ epkgs.erlang ];
       }
       {
         enabled = withElixir;
-        buildInputs = [ nixpkgs.elixir ];
+        buildInputs = [ pkgs.elixir ];
         emacsPkgs = epkgs: [ epkgs.elixir-mode ];
         emacsConfig = elisp "elixir";
       }
@@ -274,7 +274,7 @@ let
           [ epkgs.haskell-mode epkgs.ormolu ]
           ++ (when withLsp [ epkgs.lsp-haskell ]);
         vscodeExtensions = vsext:
-          (nixpkgs.vscode-utils.extensionsFromVscodeMarketplace [
+          (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
             {
               name = "haskell";
               publisher = "haskell";
@@ -289,15 +289,15 @@ let
             }
           ]);
         buildInputs = let
-          easy-hls-src = nixpkgs.fetchFromGitHub {
+          easy-hls-src = pkgs.fetchFromGitHub {
             owner = "jkachmar";
             repo = "easy-hls-nix";
             rev = "9d64543a015563942c954b89addc1108800ed134";
             sha256 = "1szq3g34dv22fqzil549mvpdd1865s64vqnfxj0l2aw9ha32jxyz";
           };
           easy-hls =
-            nixpkgs.callPackage easy-hls-src { ghcVersions = [ "8.10.4" ]; };
-        in (with nixpkgs.haskellPackages; [
+            pkgs.callPackage easy-hls-src { ghcVersions = [ "8.10.4" ]; };
+        in (with pkgs.haskellPackages; [
           ormolu
           hlint
           cabal-install
@@ -305,24 +305,24 @@ let
           hasktags
           ghc
         ])
-        ++ (when withVSCode [ nixpkgs.haskellPackages.haskell-language-server ])
+        ++ (when withVSCode [ pkgs.haskellPackages.haskell-language-server ])
         ++ (when withLsp [ easy-hls ]);
       }
       {
         enabled = withRust;
         name = "rust";
         emacsPkgs = epkgs: [ epkgs.rust-mode ];
-        buildInputs = [ nixpkgs.cargo nixpkgs.rustc ];
+        buildInputs = [ pkgs.cargo pkgs.rustc ];
       }
       {
         enabled = withPurescript;
         buildInputs = let
-          purescript = import (nixpkgs.fetchFromGitHub {
+          purescript = import (pkgs.fetchFromGitHub {
             owner = "justinwoo";
             repo = "easy-purescript-nix";
             rev = "fbbb27c1afd51d729939a6a2006e954dbd844846";
             sha256 = "1kw9cqycrq456dipd5mq7c1ij6jl3d9ajlnba152db3qrw5wmrg0";
-          }) { pkgs = nixpkgs; };
+          }) { pkgs = pkgs; };
         in (with purescript; [ spago purs zephyr ]);
         emacsConfig = elisp "purescript";
         emacsPkgs = epkgs: [ epkgs.purescript-mode epkgs.psci epkgs.psc-ide ];
@@ -330,16 +330,16 @@ let
       {
         name = "nodejs";
         enabled = withReason;
-        buildInputs = [ nixpkgs.nodejs nixpkgs.nodePackages.pnpm ];
+        buildInputs = [ pkgs.nodejs pkgs.nodePackages.pnpm ];
       }
       {
         enabled = withReason;
-        buildInputs = [ nixpkgs.bs-platform ] ++ (when withLsp
-          [ (import ./reason-language-server.nix { nixpkgs = nixpkgs; }) ]);
+        buildInputs = [ pkgs.bs-platform ] ++ (when withLsp
+          [ (import ./reason-language-server.nix { pkgs = pkgs; }) ]);
         emacsPkgs = epkgs: [ epkgs.reason-mode ];
         emacsConfig = elisp "reason";
         vscodeExtensions = vpkgs:
-          (nixpkgs.vscode-utils.extensionsFromVscodeMarketplace [
+          (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
             {
               name = "reason-vscode";
               publisher = "jaredly";
@@ -365,16 +365,16 @@ let
       }
       {
         enabled = withReasonNative;
-        buildInputs = [ nixpkgs.ocamlPackages.reason ];
+        buildInputs = [ pkgs.ocamlPackages.reason ];
       }
       {
         name = "ocaml";
         enabled = withOcaml || withReasonNative || withReason;
         buildInputs = [
-          nixpkgs.dune_2
-          nixpkgs.opam
-          nixpkgs.ocaml
-          nixpkgs.ocamlPackages.merlin
+          pkgs.dune_2
+          pkgs.opam
+          pkgs.ocaml
+          pkgs.ocamlPackages.merlin
         ];
         emacsPkgs = epkgs: [ epkgs.tuareg ];
       }
@@ -385,15 +385,15 @@ let
       {
         enabled = withX && withVulkan;
         buildInputs = [
-          nixpkgs.vulkan-loader
-          nixpkgs.vulkan-validation-layers
-          nixpkgs.vulkan-headers
-          nixpkgs.vulkan-tools
+          pkgs.vulkan-loader
+          pkgs.vulkan-validation-layers
+          pkgs.vulkan-headers
+          pkgs.vulkan-tools
         ] ++ (when withIntel [ nixGL.nixVulkanIntel ]);
       }
       {
         enabled = withJson;
-        buildInputs = [ nixpkgs.jq ];
+        buildInputs = [ pkgs.jq ];
         emacsPkgs = epkgs: [ epkgs.json-mode epkgs.counsel-jq ];
         emacsConfig = elisp "json";
       }
@@ -410,7 +410,7 @@ let
         enabled = withJson || withYaml || withGraphQL || withCss
           || withMarkdown;
         name = "prettier";
-        buildInputs = [ nixpkgs.nodePackages.prettier ];
+        buildInputs = [ pkgs.nodePackages.prettier ];
       }
       {
         enabled = withRpm;
@@ -424,7 +424,7 @@ let
         vimConfig = "let g:dhall_format=1";
         vimPkgs = vpkgs: [ vpkgs.dhall-vim ];
         vscodeExtensions = vsext:
-          (nixpkgs.vscode-utils.extensionsFromVscodeMarketplace [
+          (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
             {
               name = "dhall-lang";
               publisher = "dhall";
@@ -439,12 +439,12 @@ let
             }
           ]);
         buildInputs = let
-          dhall = import (nixpkgs.fetchFromGitHub {
+          dhall = import (pkgs.fetchFromGitHub {
             owner = "justinwoo";
             repo = "easy-dhall-nix";
             rev = "aa1dafc30d36bd4609ead0faaee66e44f617f981";
             sha256 = "0n1ry6785j44kl4zp74vlvj20ik8gqh7zw9pc2g6arhh77vxhhir";
-          }) { pkgs = nixpkgs; };
+          }) { pkgs = pkgs; };
         in (with dhall;
           [ dhall-simple dhall-json-simple dhall-yaml-simple dhall-docs-simple ]
           ++ (when withLsp [ dhall-lsp-simple ]));
@@ -461,7 +461,7 @@ let
       }
       {
         enabled = withPlantuml;
-        buildInputs = [ nixpkgs.plantuml nixpkgs.openjdk nixpkgs.graphviz ];
+        buildInputs = [ pkgs.plantuml pkgs.openjdk pkgs.graphviz ];
         emacsPkgs = epkgs: [ epkgs.plantuml-mode ];
       }
       {
@@ -485,7 +485,7 @@ let
       }
       {
         enabled = withAts;
-        buildInputs = [ nixpkgs.ats2 nixpkgs.haskellPackages.ats-format ];
+        buildInputs = [ pkgs.ats2 pkgs.haskellPackages.ats-format ];
         emacsConfig = elisp "ats";
       }
       {
@@ -494,19 +494,19 @@ let
       }
       {
         enabled = withNotMuch;
-        buildInputs = with nixpkgs; [ notmuch msmtp dovecot_pigeonhole isync ];
+        buildInputs = with pkgs; [ notmuch msmtp dovecot_pigeonhole isync ];
         emacsPkgs = epkgs:
           [
             (epkgs.melpaBuild {
               pname = "notmuch";
-              src = nixpkgs.notmuch.src;
-              version = nixpkgs.notmuch.version;
-              nativeBuildInputs = [ nixpkgs.pkg-config ];
-              buildInputs = nixpkgs.notmuch.buildInputs;
+              src = pkgs.notmuch.src;
+              version = pkgs.notmuch.version;
+              nativeBuildInputs = [ pkgs.pkg-config ];
+              buildInputs = pkgs.notmuch.buildInputs;
               patches = [
                 ./patches/0001-wip-add-notmuch-progressive-search-custom.patch
               ];
-              recipe = nixpkgs.writeText "recipe" ''
+              recipe = pkgs.writeText "recipe" ''
                 (notmuch :url "https://git.notmuchmail.org/git/notmuch" :fetcher git :files ("emacs/*.el" "emacs/*.png"))
               '';
 
@@ -515,11 +515,11 @@ let
       }
       {
         enabled = withNeuron;
-        buildInputs = [ (import ./neuron.nix { nixpkgs = nixpkgs; }) ];
+        buildInputs = [ (import ./neuron.nix { pkgs = pkgs; }) ];
         emacsPkgs = epkgs:
           [
             (epkgs.neuron-mode.overrideAttrs (old: {
-              src = nixpkgs.fetchFromGitHub {
+              src = pkgs.fetchFromGitHub {
                 owner = "felko";
                 repo = "neuron-mode";
                 rev = "d769042ca0b715c8da7947421302b52222598e95";
@@ -540,25 +540,25 @@ let
   concatModuleList = f: builtins.concatLists (map f modules);
 
   # the fonts
-  fonts = nixpkgs.makeFontsConf {
-    fontDirectories = [ nixpkgs.iosevka nixpkgs.noto-fonts-emoji ];
+  fonts = pkgs.makeFontsConf {
+    fontDirectories = [ pkgs.iosevka pkgs.noto-fonts-emoji ];
   };
 
   # the emacs derivation
-  emacs-overlay = import (nixpkgs.fetchFromGitHub {
+  emacs-overlay = import (pkgs.fetchFromGitHub {
     owner = "nix-community";
     repo = "emacs-overlay";
     rev = "6df62227999e980e04700eb4078b7bb1d92f6db7";
     sha256 = "0hj17qm7z9q73wwwxxj31p1hg72fr89wkp7qxz82336kkjp0r30c";
-  }) nixpkgs nixpkgs;
+  }) pkgs pkgs;
 
-  emacsDrv = if withEmacsGcc then emacs-overlay.emacsGcc else nixpkgs.emacs;
+  emacsDrv = if withEmacsGcc then emacs-overlay.emacsGcc else pkgs.emacs;
 
   emacsOverride = self: super: {
     spinner = super.spinner.override {
       elpaBuild = args: super.elpaBuild (args // {
         version = "1.7.4";
-        src = nixpkgs.fetchurl {
+        src = pkgs.fetchurl {
           url = "https://elpa.gnu.org/packages/spinner-1.7.4.tar";
           sha256 = "140kss25ijbwf8hzflbjz67ry76w2cyrh02axk95n6qcxv7jr7pv";
         };
@@ -566,23 +566,23 @@ let
     };
   };
 
-  emacs = ((nixpkgs.emacsPackagesGen emacsDrv).overrideScope' emacsOverride).emacsWithPackages (epkgs:
+  emacs = ((pkgs.emacsPackagesGen emacsDrv).overrideScope' emacsOverride).emacsWithPackages (epkgs:
     (let
       # the emacs config:
-      emacsSite = nixpkgs.writeText "default.el" ((elisp "base")
+      emacsSite = pkgs.writeText "default.el" ((elisp "base")
         + (elisp "base-extra") + (elisp "format-all")
         + (concatModuleText (m: m.emacsConfig)) + ''
           ;; reset gc to reasonable level
           (setq gc-cons-threshold (* 20 1024 1024))'');
 
       # emacs packages:
-      language-id-src = nixpkgs.fetchFromGitHub {
+      language-id-src = pkgs.fetchFromGitHub {
         owner = "lassik";
         repo = "emacs-language-id";
         rev = "30a5bc267af7de167d0a835ead828016e6e7e14c";
         sha256 = "1wkppwh72zs8b4jqdxqpf3gikh11la03nkj8nna9bg7k8n0a4vaq";
       };
-      format-all-src = nixpkgs.fetchFromGitHub {
+      format-all-src = pkgs.fetchFromGitHub {
         owner = "lassik";
         repo = "emacs-format-all-the-code";
         rev = "351057f7efde71dcd4b6c5eadcbcfcd8d53d2a47";
@@ -592,7 +592,7 @@ let
         pname = "language-id";
         src = language-id-src;
         version = "1";
-        recipe = nixpkgs.writeText "recipe" ''
+        recipe = pkgs.writeText "recipe" ''
           (language-id :repo "lassik/emacs-language-id" :fetcher github :files ("*.el"))
         '';
       });
@@ -601,20 +601,20 @@ let
         src = format-all-src;
         version = "1";
         packageRequires = [ language-id ];
-        recipe = nixpkgs.writeText "recipe" ''
+        recipe = pkgs.writeText "recipe" ''
           (format-all :repo "lassik/emacs-format-all-the-code" :fetcher github :files ("*.el"))
         '';
       });
       inheritenv = (epkgs.melpaBuild {
         pname = "inheritenv";
         version = "0.1";
-        src = nixpkgs.fetchFromGitHub {
+        src = pkgs.fetchFromGitHub {
           owner = "purcell";
           repo = "inheritenv";
           rev = "0.1";
           sha256 = "0ygzf70vfb7qwpsllcq5i3brprsnx3sxy2zng02mzwrr5jkx4ypc";
         };
-        recipe = nixpkgs.writeText "recipe" ''
+        recipe = pkgs.writeText "recipe" ''
           (inheritenv :repo "purcell/inheritenv" :fetcher github :files ("*.el"))
         '';
       });
@@ -628,7 +628,7 @@ let
       ];
       prog = [ epkgs.flycheck format-all inheritenv ];
       base = [
-        (nixpkgs.runCommand "default.el" { } ''
+        (pkgs.runCommand "default.el" { } ''
           mkdir -p $out/share/emacs/site-lisp
           cp ${emacsSite} $out/share/emacs/site-lisp/default.el
         '')
@@ -651,11 +651,11 @@ let
     in base ++ (concatModuleList (m: m.emacsPkgs epkgs))));
 
   # vim
-  vim = nixpkgs.vim_configurable.customize {
+  vim = pkgs.vim_configurable.customize {
     name = "vim";
     vimrcConfig.packages.myVimPackage = {
       # loaded on launch
-      start = concatModuleList (m: m.vimPkgs nixpkgs.vimPlugins);
+      start = concatModuleList (m: m.vimPkgs pkgs.vimPlugins);
     };
     vimrcConfig.customRC = ''
       filetype indent plugin on
@@ -672,24 +672,24 @@ let
   };
 
   # code
-  vscode = nixpkgs.vscode-with-extensions.override {
+  vscode = pkgs.vscode-with-extensions.override {
     vscodeExtensions =
-      (when withCodeVim [ nixpkgs.vscode-extensions.vscodevim.vim ])
-      ++ (concatModuleList (m: m.vscodeExtensions nixpkgs.vscode-extensions));
+      (when withCodeVim [ pkgs.vscode-extensions.vscodevim.vim ])
+      ++ (concatModuleList (m: m.vscodeExtensions pkgs.vscode-extensions));
   };
 
   # pycharm
-  pycharm = nixpkgs.jetbrains.pycharm-community;
+  pycharm = pkgs.jetbrains.pycharm-community;
 
   # openGL
-  nixGL = import (nixpkgs.fetchFromGitHub
+  nixGL = import (pkgs.fetchFromGitHub
     (builtins.fromJSON (builtins.readFile ./nixGL.json))) {
-      pkgs = nixpkgs;
+      pkgs = pkgs;
       enable32bits = false;
     };
 
   # devenv derivations collection:
-  devenv = (with nixpkgs; [
+  devenv = (with pkgs; [
     bash
     fontconfig
     hack-font
@@ -706,17 +706,17 @@ let
     ++ (concatModuleList (m: m.buildInputs));
 
   # share the pinned nixpkgs
-  nixpkgs_src = nixpkgs.fetchFromGitHub
+  nixpkgs_src = pkgs.fetchFromGitHub
     (builtins.fromJSON (builtins.readFile ./nixpkgs.json));
 
-  shellEnv = nixpkgs.mkShell {
+  shellEnv = pkgs.mkShell {
     buildInputs = devenv;
     shellHook = ''
-      export LD_LIBRARY_PATH=${nixpkgs.stdenv.cc.cc.lib}/lib/:/run/opengl-driver/lib/
+      export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib/:/run/opengl-driver/lib/
       export __ETC_PROFILE_NIX_SOURCED=1
       export NIX_PATH=nixpkgs=${nixpkgs_src}
     '' + (if withAts then ''
-      export ATS_LOADPATH=${nixpkgs.ats2}/share/emacs/site-lisp/ats2
+      export ATS_LOADPATH=${pkgs.ats2}/share/emacs/site-lisp/ats2
     '' else
       "") + (if withX then ''
         export FONTCONFIG_FILE=${fonts}
