@@ -228,7 +228,7 @@ let
       }
       {
         enabled = withNix;
-        buildInputs = [ pkgs.nixfmt ];
+        buildInputs = [ pkgs.nixfmt pkgs.nixUnstable ];
         emacsPkgs = epkgs: [ epkgs.nix-mode ];
         emacsConfig = elisp "nix";
         vscodeExtensions = vsext:
