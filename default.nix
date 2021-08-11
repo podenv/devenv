@@ -23,8 +23,6 @@ withSolarized ? true,
 withEmacsEvil ? false,
 # vscode with Vim binding
 withCodeVim ? false,
-# faster emacs
-withEmacsGcc ? false,
 # rcs
 withGit ? true, withDarcs ? false,
 # notes
@@ -548,11 +546,11 @@ let
   emacs-overlay = import (pkgs.fetchFromGitHub {
     owner = "nix-community";
     repo = "emacs-overlay";
-    rev = "6df62227999e980e04700eb4078b7bb1d92f6db7";
-    sha256 = "0hj17qm7z9q73wwwxxj31p1hg72fr89wkp7qxz82336kkjp0r30c";
+    rev = "1b2539d9e1e96fb1518a09bba53f56f5dabc5d52";
+    sha256 = "0xm819cmxv0d0rm90d442a9dq59k2farwdxxqwq4gfxqqwbhmbm8";
   }) pkgs pkgs;
 
-  emacsDrv = if withEmacsGcc then emacs-overlay.emacsGcc else pkgs.emacs;
+  emacsDrv = emacs-overlay.emacsGit;
 
   emacsOverride = self: super: {
     spinner = super.spinner.override {
