@@ -22,7 +22,4 @@
   :requires lsp)
 
 (setq lsp-haskell-server-wrapper-function
-      (lambda (argv)
-        (append (list "nix-shell" "-I" (lsp-haskell--get-root) "--command")
-                (list (mapconcat 'identity argv " ")))
-        ))
+      (lambda (argv) (append (list "nix" "develop" "--command") argv)))
