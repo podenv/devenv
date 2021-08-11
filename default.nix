@@ -54,7 +54,7 @@ withMarkdown ? true, withRestructuredText ? true, withPdf ? false,
 # wip language
 withIdris ? false, withOcaml ? false, withReasonNative ? false,
 # javascript language
-withReason ? false, withPurescript ? false,
+withRescript ? false, withReason ? false, withPurescript ? false,
 # minimal override
 minimal ? false, }:
 
@@ -327,13 +327,17 @@ let
       }
       {
         name = "nodejs";
-        enabled = withReason;
+        enabled = withReason || withRescript;
         buildInputs = [ pkgs.nodejs pkgs.nodePackages.pnpm ];
       }
       {
+        enabled = withRescript;
+        emacsPkgs = epkgs: [ epkgs.reason-mode ];
+        emacsConfig = elisp "rescript";
+      }
+      {
         enabled = withReason;
-        buildInputs = [ pkgs.bs-platform ] ++ (when withLsp
-          [ (import ./reason-language-server.nix { pkgs = pkgs; }) ]);
+        buildInputs = [ pkgs.bs-platform ];
         emacsPkgs = epkgs: [ epkgs.reason-mode ];
         emacsConfig = elisp "reason";
         vscodeExtensions = vpkgs:
