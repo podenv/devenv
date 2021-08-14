@@ -13,13 +13,12 @@ For example, `withPython` results in:
 - emacs config: flycheck-mypy
 - vscode extension: ms-python
 
-`withReason` results in:
+`withRescript` results in:
 
 - runtime: nodejs
 - package manager: yarn
-- formatter: bsrefmt
+- formatter: rescript
 - emacs config: reason-mode
-- vscode extension: reason-vscode
 
 `withLsp` enables language-server protocol extensions.
 
@@ -35,59 +34,53 @@ Devenv documentation is organized into the following [four sections][documentati
 
 ## Tutorials
 
-### Run the container
+### Try devenv
 
-TBD
+Prefix the following commands with `podenv --x11 --network --git --home ~/.devenv`
+to use a container.
 
-### Install and use devenv
-
-Starts with `nix-shell`, or using podenv:
-
-```
-podenv --x11 --network --git --home ~/.devenv nix-shell
-mkdir -p ~/src/github.com/podenv/ && nix-shell -p "git" --command "git clone https://github.com/podenv/devenv ~/src/github.com/podenv/devenv"
-nix-shell ~/src/github.com/podenv/devenv/
-```
-
-Use Emacs:
+Emacs:
 
 ```
 nix-shell --arg withEmacs true
 ```
 
-Use ViM:
+ViM:
 
 ```
 nix-shell --arg withVim true
 ```
 
-Use VSCode:
+VSCode:
 
 ```
-NIXPKGS_ALLOW_UNFREE=1 nix-shell --arg withVSCode true
+nix-shell --arg withVSCode true
 ```
 
-### Add custom module
+### Install devenv
 
-TBD
+Here are some useful commands to install the env in ~/.nix-profile:
 
-## Howtos
+```
+# Using the command line:
+nix-env -if ./default.nix --attr devenv --arg withVim true --arg withDhall true
+# Using a custom configuration file:
+nix-env -if ./emacs-demo.nix --arg withRuntime false
+```
 
-### Adds python packages
+Check dependency tree before installation (replace `nix-env -if` with `nix-instantiate`):
 
-TBD
+```
+nix-store -q --tree $(nix-instantiate --arg withRuntime true ./emacs-demo.nix)
+```
 
-### Setup hoogle code search service
+Reset install:
 
-TBD
-
-### Use neuron
-
-TBD
-
-### Disable formatter
-
-TBD
+```
+OLD_NIX_ENV=$(readlink $(which nix-env))
+nix-env -e '.*'
+$OLD_NIX_ENV --arg withNix true --attr devenv -if ./default.nix
+```
 
 ## Discussions
 

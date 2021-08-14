@@ -10,7 +10,7 @@
 
 { pkgs ? import ./nixpkgs.nix,
 # base
-withTools ? false, withX ? true, withIntel ? false,
+withTools ? false, withX ? false, withIntel ? false,
 # editor
 withEmacs ? false, withVSCode ? false, withVim ? false, withPyCharm ? false,
 # build
@@ -18,25 +18,25 @@ withShake ? false,
 # lsp
 withLsp ? false,
 # eye friendly, low-constrat color theme
-withSolarized ? true,
+withSolarized ? false,
 # emacs with vim binding
 withEmacsEvil ? false,
 # vscode with Vim binding
 withCodeVim ? false,
 # rcs
-withGit ? true, withDarcs ? false,
+withGit ? false, withDarcs ? false,
 # notes
 withNeuron ? false, withOrg ? false,
 # mails
 withNotMuch ? false,
 # language
-withC ? true, withPython ? true, withHaskell ? false, withErlang ? false
+withC ? false, withPython ? false, withHaskell ? false, withErlang ? false
 , withElixir ? false, withNix ? false, withAts ? false, withGLSL ? false
 , withGo ? false, withTypescript ? false, withRust ? false,
 # lisp
 withHy ? false, withRacket ? false,
 # conf
-withDhall ? true, withJson ? true, withYaml ? true,
+withDhall ? false, withJson ? false, withYaml ? false,
 # idl
 withPlantuml ? false, withProtobuf ? false, withThrift ? false,
 # network
@@ -50,13 +50,13 @@ withOpenGL ? false, withVulkan ? false,
 # web
 withW3M ? false, withGraphQL ? false, withCss ? false,
 # text
-withMarkdown ? true, withRestructuredText ? true, withPdf ? false,
+withMarkdown ? false, withRestructuredText ? false, withPdf ? false,
 # wip language
 withIdris ? false, withOcaml ? false, withReasonNative ? false,
 # javascript language
-withRescript ? false, withReason ? false, withPurescript ? false,
-# minimal override
-minimal ? false, }:
+withRescript ? false, withReason ? false, withPurescript ? false
+, withBaseTools ? false
+, withRuntime ? true }:
 
 let
   # utility functions
@@ -68,7 +68,6 @@ let
     ({
       enabled = false;
       name = "module-name";
-      minimal = false;
       url = "info-url";
       doc = "usage";
       # list of derivations
@@ -85,7 +84,7 @@ let
 
   # devenv modules
   modules =
-    builtins.filter (m: m.enabled && (if minimal then m.minimal else true))
+    builtins.filter (m: m.enabled)
     (map module [
       {
         enabled = withX && withSolarized;
@@ -554,7 +553,7 @@ let
     sha256 = "0xm819cmxv0d0rm90d442a9dq59k2farwdxxqwq4gfxqqwbhmbm8";
   }) pkgs pkgs;
 
-  emacsDrv = emacs-overlay.emacsGit;
+  emacsDrv = if withX then pkgs.emacs else pkgs.emacs-nox;
 
   emacsOverride = self: super: {
     spinner = super.spinner.override {
@@ -690,8 +689,7 @@ let
       enable32bits = false;
     };
 
-  # devenv derivations collection:
-  devenv = (with pkgs; [
+  base = (with pkgs; [
     bash
     fontconfig
     hack-font
@@ -703,9 +701,12 @@ let
     systemd
     libnotify
     openssl
-  ]) ++ (when withEmacs [ emacs ]) ++ (when withVim [ vim ])
+  ]);
+  # devenv derivations collection:
+  devenv = (when withEmacs [ emacs ]) ++ (when withVim [ vim ])
     ++ (when withVSCode [ vscode ]) ++ (when withPyCharm [ pycharm ])
-    ++ (concatModuleList (m: m.buildInputs));
+    ++ (when withRuntime (
+      (when withBaseTools base) ++ concatModuleList (m: m.buildInputs)));
 
   # share the pinned nixpkgs
   nixpkgs_src = pkgs.fetchFromGitHub
