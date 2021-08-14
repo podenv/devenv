@@ -290,8 +290,8 @@ let
           easy-hls-src = pkgs.fetchFromGitHub {
             owner = "jkachmar";
             repo = "easy-hls-nix";
-            rev = "9d64543a015563942c954b89addc1108800ed134";
-            sha256 = "1szq3g34dv22fqzil549mvpdd1865s64vqnfxj0l2aw9ha32jxyz";
+            rev = "a332d37c59fdcc9e44907bf3f48cf20b6d275ef4";
+            sha256 = "1zwgg8qd33411c9rdlz1x7qv65pbw80snlvadifm4bm4avpkjhnk";
           };
           easy-hls =
             pkgs.callPackage easy-hls-src { ghcVersions = [ "8.10.4" ]; };
@@ -304,7 +304,7 @@ let
           ghc
         ])
         ++ (when withVSCode [ pkgs.haskellPackages.haskell-language-server ])
-        ++ (when withLsp [ easy-hls ]);
+        ++ (when withLsp [ easy-hls.nixosDrv ]);
       }
       {
         enabled = withRust;
