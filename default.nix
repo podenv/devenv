@@ -297,6 +297,7 @@ let
         in (with pkgs.haskellPackages; [
           ormolu
           hlint
+          ghcid
           cabal-install
           stack
           hasktags
@@ -553,7 +554,7 @@ let
     sha256 = "0xm819cmxv0d0rm90d442a9dq59k2farwdxxqwq4gfxqqwbhmbm8";
   }) pkgs pkgs;
 
-  emacsDrv = if withX then pkgs.emacs else pkgs.emacs-nox;
+  emacsDrv = if withX then emacs-overlay.emacsGit else emacs-overlay.emacsGit-nox;
 
   emacsOverride = self: super: {
     spinner = super.spinner.override {
@@ -634,6 +635,7 @@ let
           cp ${emacsSite} $out/share/emacs/site-lisp/default.el
         '')
         epkgs.use-package
+        epkgs.vterm
         epkgs.anzu
         epkgs.rainbow-delimiters
         epkgs.undo-tree
