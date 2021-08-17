@@ -704,6 +704,21 @@ let
     libnotify
     openssl
   ]);
+
+  env-vars =
+''
+      export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib/:/run/opengl-driver/lib/
+      export NIX_PATH=nixpkgs=${nixpkgs_src}
+    '' + (if withAts then ''
+      export ATS_LOADPATH=${pkgs.ats2}/share/emacs/site-lisp/ats2
+    '' else
+      "") + (if withX then ''
+        export FONTCONFIG_FILE=${fonts}
+      '' else
+        "");
+
+  profile = pkgs.writeScriptBin "devenv-profile" env-vars;
+
   # devenv derivations collection:
   devenv = (when withEmacs [ emacs ]) ++ (when withVim [ vim ])
     ++ (when withVSCode [ vscode ]) ++ (when withPyCharm [ pycharm ])
@@ -716,20 +731,11 @@ let
 
   shellEnv = pkgs.mkShell {
     buildInputs = devenv;
-    shellHook = ''
-      export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib/:/run/opengl-driver/lib/
-      export __ETC_PROFILE_NIX_SOURCED=1
-      export NIX_PATH=nixpkgs=${nixpkgs_src}
-    '' + (if withAts then ''
-      export ATS_LOADPATH=${pkgs.ats2}/share/emacs/site-lisp/ats2
-    '' else
-      "") + (if withX then ''
-        export FONTCONFIG_FILE=${fonts}
-      '' else
-        "");
+    shellHook = env-vars;
   };
 
 in {
+  profile = profile;
   devenv = devenv;
   shellEnv = shellEnv;
 }

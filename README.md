@@ -74,6 +74,13 @@ Check dependency tree before installation (replace `nix-env -if` with `nix-insta
 nix-store -q --tree $(nix-instantiate --arg withRuntime true ./emacs-demo.nix)
 ```
 
+Setup extra environments variables:
+
+```
+nix-env -if ./default.nix --attr profile
+# Add `source ~/.nix-profile/bin/devenv-profile` to ~/.bashrc
+```
+
 Reset install:
 
 ```
