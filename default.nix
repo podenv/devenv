@@ -55,6 +55,7 @@ withMarkdown ? false, withRestructuredText ? false, withPdf ? false,
 withIdris ? false, withOcaml ? false, withReasonNative ? false,
 # javascript language
 withRescript ? false, withReason ? false, withPurescript ? false
+, withElm ? false
 , withBaseTools ? false
 , withRuntime ? true }:
 
@@ -324,6 +325,11 @@ let
         in (with purescript; [ spago purs zephyr ]);
         emacsConfig = elisp "purescript";
         emacsPkgs = epkgs: [ epkgs.purescript-mode epkgs.psci epkgs.psc-ide ];
+      }
+      {
+        enabled = withElm;
+        buildInputs = with pkgs.elmPackages; [ elm elm-format elm-review ];
+        emacsPkgs = epkgs: [ epkgs.elm-mode ];
       }
       {
         name = "nodejs";
