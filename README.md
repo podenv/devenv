@@ -36,7 +36,7 @@ Devenv documentation is organized into the following [four sections][documentati
 
 ### Try devenv
 
-Prefix the following commands with `podenv --x11 --network --git --home ~/.devenv`
+Prefix the following commands with `podenv --network --cwd -v ~/.config/git -v devenv:~ nix`
 to use a container.
 
 Emacs:

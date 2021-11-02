@@ -740,7 +740,7 @@ let
     shellHook = env-vars;
   };
 
-in {
+in if pkgs.lib.inNixShell then shellEnv else {
   profile = profile;
   devenv = devenv;
   shellEnv = shellEnv;
