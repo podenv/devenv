@@ -319,8 +319,8 @@ let
           purescript = import (pkgs.fetchFromGitHub {
             owner = "justinwoo";
             repo = "easy-purescript-nix";
-            rev = "fbbb27c1afd51d729939a6a2006e954dbd844846";
-            sha256 = "1kw9cqycrq456dipd5mq7c1ij6jl3d9ajlnba152db3qrw5wmrg0";
+            rev = "7802db65618c2ead3a55121355816b4c41d276d9";
+            sha256 = "sha256-uAS889Rpl//h0Ne2M7NyNk6tDFOkr9O3R8yny3qHKVk=";
           }) { pkgs = pkgs; };
         in (with purescript; [ spago purs zephyr ]);
         emacsConfig = elisp "purescript";
