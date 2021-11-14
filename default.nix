@@ -556,8 +556,8 @@ let
   emacs-overlay = import (pkgs.fetchFromGitHub {
     owner = "nix-community";
     repo = "emacs-overlay";
-    rev = "1b2539d9e1e96fb1518a09bba53f56f5dabc5d52";
-    sha256 = "0xm819cmxv0d0rm90d442a9dq59k2farwdxxqwq4gfxqqwbhmbm8";
+    rev = "23c8464f4527a2b19f6b4776378dd03b8289aa85";
+    sha256 = "sha256-XmXmV7ddohRKXcVzVDdw6LB0/53gu+rjQ+vScdakKGM=";
   }) pkgs pkgs;
 
   emacsDrv = if withX then emacs-overlay.emacsGit else emacs-overlay.emacsGit-nox;
