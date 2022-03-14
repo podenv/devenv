@@ -25,6 +25,10 @@
   (ivy-mode 1)
   )
 
+(use-package ivy-rich
+  :ensure t
+  :init (ivy-rich-mode 1))
+
 ;; Setup flycheck
 (use-package flycheck
   :hook (prog-mode . flycheck-mode)

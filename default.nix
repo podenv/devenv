@@ -96,7 +96,9 @@ let
       name = "git";
       minimal = true;
       emacsConfig = elisp "magit";
-      emacsPkgs = epkgs: [ epkgs.magit epkgs.forge epkgs.ghub ];
+      emacsPkgs = epkgs:
+        [ epkgs.magit epkgs.forge epkgs.ghub ]
+        ++ (when withX [ epkgs.git-gutter ]);
       buildInputs = [ pkgs.openssh pkgs.git pkgs.gitAndTools.hub ];
     }
     {
@@ -391,6 +393,15 @@ let
       emacsPkgs = epkgs: [ epkgs.tuareg ];
     }
     {
+      enabled = withX;
+      emacsPkgs = epkgs: [
+        epkgs.all-the-icons
+        epkgs.all-the-icons-dired
+        epkgs.all-the-icons-ivy-rich
+      ];
+      emacsConfig = elisp "gfx";
+    }
+    {
       enabled = withX && withOpenGL;
       buildInputs = (when withIntel [ nixGL.nixGLIntel ]);
     }
@@ -639,6 +650,7 @@ let
           epkgs.swiper
           epkgs.company
           epkgs.projectile
+          epkgs.ivy-rich
         ];
         prog = [ epkgs.flycheck format-all inheritenv ];
         base = [
@@ -662,6 +674,7 @@ let
           epkgs.ace-window
           epkgs.ace-link
           epkgs.avy
+          epkgs.doom-modeline
         ] ++ ivy ++ prog;
       in base ++ (concatModuleList (m: m.emacsPkgs epkgs))));
 

@@ -203,7 +203,7 @@
 (use-package undo-tree
   :diminish
   :config
-  ;; (setq undo-tree-visualizer-timestamps t)
+  (setq undo-tree-visualizer-timestamps t)
   (setq undo-tree-visualizer-diff t)
   (global-undo-tree-mode))
 
