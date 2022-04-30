@@ -2,109 +2,76 @@
 
 ## Overview and scope
 
-At a high level, devenv is a modular container declared with nix.
-A module defines a runtime, associated tools and IDE configuration.
+At a high level, devenv is a modular IDE configuration declared with Nix.
+It comes in three flavors:
 
-For example, `withPython` results in:
+- minimal: just git and basic IDE configuration
+- normal: common languages
+- complete: includes support for all the languages
 
-- runtime: python38
-- package manager: pip, tox
-- formatter and linter: black, flake8, mypy
-- emacs config: flycheck-mypy
-- vscode extension: ms-python
+And it supports four editors:
 
-`withRescript` results in:
+- emacs
+- emacs-nox
+- vim
+- vscode
 
-- runtime: nodejs
-- package manager: yarn
-- formatter: rescript
-- emacs config: reason-mode
+## Use
 
-`withLsp` enables language-server protocol extensions.
+Run the editor with the normal flavor:
 
-Vim and PyCharm are also supported.
+- `nix run github:podenv/devenv#emacs-nox`
+- `nix run github:podenv/devenv#vim`
+- `nix run github:podenv/devenv#vscode`
 
-The goal is to provide the best in class developer experience for PL enthusiast.
+Install the languages toolchains:
 
-# Documentation
+- `nix profile install github:podenv/devenv#emacs-nox $(nix run github:podenv/devenv#toolchains)`
 
-Devenv documentation is organized into the following [four sections][documentation]:
+To use the other flavors, add `-minimal` or `-extra` to the attribute name, for example:
 
-[documentation]: https://www.divio.com/en/blog/documentation/
+- `nix run github:podenv/devenv#vim-minimal`
+- `nix run github:podenv/devenv#emacs-complete`
 
-## Tutorials
+Install all the runtimes with:
 
-### Try devenv
-
-Prefix the following commands with `podenv --network --cwd -v ~/.config/git -v devenv:~ nix`
-to use a container.
-
-Emacs:
-
-```
-nix-shell --arg withEmacs true
+```ShellSession
+$ nix profile install github:podenv/devenv#emacs-complete $(nix run github:podenv/devenv#toolchains-complete)
 ```
 
-ViM:
+## Inspect
 
-```
-nix-shell --arg withVim true
-```
+Get the list of installables:
 
-VSCode:
-
-```
-nix-shell --arg withVSCode true
+```ShellSession
+$ nix flake show github:podenv/devenv
 ```
 
-### Install devenv
+Get the dependencies list:
 
-Here are some useful commands to install the env in ~/.nix-profile:
-
-```
-# Using the command line:
-nix-env -if ./default.nix --attr devenv --arg withVim true --arg withDhall true
-# Using a custom configuration file:
-nix-env -if ./emacs-demo.nix --arg withRuntime false
+```ShellSession
+$ nix path-info --derivation -rsSh $installable
 ```
 
-Check dependency tree before installation (replace `nix-env -if` with `nix-instantiate`):
+> Try running `nix build $installable` if path-info fails with `error: path '/nix/store/...` is not valid
 
-```
-nix-store -q --tree $(nix-instantiate --arg withRuntime true ./emacs-demo.nix)
-```
+Get the runtime dependencies list:
 
-Setup extra environments variables:
-
-```
-nix-env -if ./default.nix --attr profile
-# Add `source ~/.nix-profile/bin/devenv-profile` to ~/.bashrc
+```ShellSession
+$ nix path-info -rsSh $installable
 ```
 
-Reset install:
+Display the list as a tree:
 
-```
-OLD_NIX_ENV=$(readlink $(which nix-env))
-nix-env -e '.*'
-$OLD_NIX_ENV --arg withNix true --attr devenv -if ./default.nix
+```ShellSession
+$ nix-store -q --tree $(nix path-info $installable)
 ```
 
-## Discussions
-
-### Reproducable environment
-
-See https://nixos.org/ or https://guix.gnu.org/
-
-## References
-
-### Configuration
-
-See the [default.nix](./default.nix) entrypoint.
-
-### Contribute
+## Contribute
 
 Contribution are most welcome, for example the project needs help to:
 
 - Support more languages.
 - Add Vim configuration.
 - Improve documentation.
+- Define more installables (such as `emacs-evil`).

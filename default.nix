@@ -1,18 +1,6 @@
-/* nix cheat-sheet:
-   # nix lang:
-      https://nixos.org/manual/nix/stable/#sec-language-operators
-   # Query emacs packages:
-      nix-env -f "<nixpkgs>" -qaP -A emacsPackages.elpaPackages
-      nix-env -f "<nixpkgs>" -qaP -A emacsPackages.melpaPackages
-      nix-env -f "<nixpkgs>" -qaP -A emacsPackages.melpaStablePackages
-      nix-env -f "<nixpkgs>" -qaP -A emacsPackages.orgPackages
-*/
-
-{ pkgs ? import ./nixpkgs.nix,
+{ pkgs,
 # base
-withTools ? false, withX ? false, withIntel ? false,
-# editor
-withEmacs ? false, withVSCode ? false, withVim ? false, withPyCharm ? false,
+withTools ? false, withX ? false,
 # build
 withShake ? false,
 # lsp
@@ -24,7 +12,7 @@ withEmacsEvil ? false,
 # vscode with Vim binding
 withCodeVim ? false,
 # rcs
-withGit ? false, withDarcs ? false,
+withGit ? false, withDarcs ? false, withGerrit ? false,
 # notes
 withNeuron ? false, withOrg ? false,
 # mails
@@ -45,17 +33,15 @@ withRest ? false,
 withRpm ? false,
 # admin
 withAnsible ? false,
-# gfx
-withOpenGL ? false, withVulkan ? false,
 # web
 withW3M ? false, withGraphQL ? false, withCss ? false,
 # text
-withMarkdown ? false, withRestructuredText ? false, withPdf ? false,
+withMarkdown ? false, withRestructuredText ? false,
 # wip language
-withIdris ? false, withOcaml ? false, withReasonNative ? false,
+withIdris ? false, withOcaml ? false,
 # javascript language
-withRescript ? false, withReason ? false, withPurescript ? false
-, withElm ? false, withBaseTools ? false, withRuntime ? true }:
+withJavascript ? false, withRescript ? false, withPurescript ? false
+, withElm ? false }:
 
 let
   # utility functions
@@ -92,7 +78,7 @@ let
       buildInputs = [ pkgs.xorg.xprop ];
     }
     {
-      enabled = withGit;
+      enabled = withGit || withGerrit;
       name = "git";
       minimal = true;
       emacsConfig = elisp "magit";
@@ -102,13 +88,26 @@ let
       buildInputs = [ pkgs.openssh pkgs.git pkgs.gitAndTools.hub ];
     }
     {
+      enabled = withGerrit;
+      buildInputs = [ pkgs.git-review ];
+    }
+    {
       enabled = withTools;
-      buildInputs =
-        [ pkgs.which pkgs.procps pkgs.iproute pkgs.coreutils pkgs.rsync ];
+      buildInputs = with pkgs; [
+        which
+        procps
+        iproute
+        rsync
+        ripgrep
+        man
+        findutils
+        libnotify
+        htop
+      ];
     }
     {
       enabled = withShake;
-      buildInputs = [ pkgs.haskellPackages.shake ];
+      buildInputs = with pkgs; [ haskellPackages.shake ];
     }
     {
       enabled = withDarcs;
@@ -117,11 +116,12 @@ let
     {
       enabled = withW3M;
       buildInputs = [ pkgs.w3m ];
-      emacsPkgs = epkgs: [ epkgs.emacsw3m ];
+      emacsPkgs = epkgs: [ epkgs.w3m ];
     }
     {
       enabled = withC;
-      buildInputs = (with pkgs; [ cmake gcc automake autoconf pkg-config ]);
+      buildInputs =
+        (with pkgs; [ cmake gcc automake autoconf openssl zlib pkg-config ]);
     }
     {
       enabled = withHy;
@@ -140,78 +140,14 @@ let
       enabled = withPython;
       minimal = true;
       buildInputs = [
-        (pkgs.python38.withPackages (ps:
+        (pkgs.python310.withPackages (ps:
           with ps;
           let
-            git-review = (when withGit [
-              (ps.buildPythonPackage rec {
-                pname = "git-review";
-                version = "1.28.0";
-                doCheck = false;
-                propagatedBuildInputs = [ pbr six requests setuptools ];
-                name = "${pname}-${version}";
-                src = ps.fetchPypi {
-                  inherit pname version;
-                  sha256 =
-                    "0nn17mfqvsa3ryjz53qjslmf60clc0vx2115kkj66h28p6vsnflf";
-                };
-              })
-            ]);
-            daiquiri = (when withGit [
-              (ps.buildPythonPackage rec {
-                pname = "daiquiri";
-                version = "2.1.1";
-                doCheck = false;
-                buildInputs = [ setuptools_scm ];
-                propagatedBuildInputs = [ python-json-logger ];
-                name = "${pname}-${version}";
-                src = ps.fetchPypi {
-                  inherit pname version;
-                  sha256 =
-                    "1qmank3c217ddiig3xr8ps0mqaydcp0q5a62in9a9g4zf72zjnqd";
-                };
-              })
-            ]);
-            git-pull-request = (when withGit [
-              (ps.buildPythonPackage rec {
-                pname = "git-pull-request";
-                version = "6.0.1";
-                doCheck = false;
-                buildInputs = [ setuptools_scm ];
-                propagatedBuildInputs = [ PyGithub daiquiri attrs ];
-                name = "${pname}-${version}";
-                src = ps.fetchPypi {
-                  inherit pname version;
-                  sha256 =
-                    "1465bzbvc1c87xj5n0cvnx2srdgq8kjj461yzwz86lw6fkfc053a";
-                };
-              })
-            ]);
-            typing-extensions = ps.typing-extensions.overridePythonAttrs
-              (old: rec {
-                version = "3.7.4.3";
-                src = ps.fetchPypi {
-                  inherit version;
-                  pname = "typing_extensions";
-                  sha256 =
-                    "0356ljrrplm917dqgpn8wjkw6j3mpp916gwxas7jhc3xc4xhgm4r";
-                };
-              });
-            black = ps.black.overridePythonAttrs (old: rec {
-              propagatedBuildInputs = [ typing-extensions ps.mypy-extensions ]
-                ++ old.propagatedBuildInputs;
-              version = "20.8b1";
-              doCheck = false;
-              src = ps.fetchPypi {
-                inherit version;
-                pname = "black";
-                sha256 = "1spv6sldp3mcxr740dh3ywp25lly9s8qlvs946fin44rl1x5a0hw";
-              };
-            });
             ansible = (when withAnsible [ ps.ansible ]);
             notmuch = (when withNotMuch [ ps.notmuch ]);
-          in git-review ++ git-pull-request ++ ansible ++ notmuch
-          ++ [ virtualenv tox pip mypy black flake8 pyyaml ]))
+            sphinx = (when withRestructuredText) [ ps.sphinx ];
+          in ansible ++ notmuch ++ sphinx
+          ++ [ virtualenv pip mypy black flake8 pyyaml ]))
       ];
       emacsConfig = elisp "python";
       emacsPkgs = epkgs: [ epkgs.flycheck-mypy ];
@@ -257,23 +193,7 @@ let
     }
     {
       enabled = withGleam;
-      emacsPkgs = epkgs:
-        [
-
-          (epkgs.melpaBuild {
-            pname = "gleam-mode";
-            src = pkgs.fetchFromGitHub {
-              owner = "gleam-lang";
-              repo = "gleam-mode";
-              rev = "60c0102e9a905027eb88600fef7d60bd3fbdaab1";
-              sha256 = "sha256-UHN8eNsVg4W7OWOU1be54ZaurbiMhdm9Dgu3kpfq9o0=";
-            };
-            version = "1";
-            recipe = pkgs.writeText "recipe" ''
-              (gleam-mode :repo "gleam-lang/gleam-mode" :fetcher github :files ("*.el"))
-            '';
-          })
-        ];
+      # emacsPkgs = epkgs: [ epkgs.gleam-mode ];
     }
     {
       enabled = withHaskell;
@@ -297,16 +217,7 @@ let
             sha256 = "0ab7m5jzxakjxaiwmg0jcck53vnn183589bbxh3iiylkpicrv67y";
           }
         ]);
-      buildInputs = let
-        easy-hls-src = pkgs.fetchFromGitHub {
-          owner = "jkachmar";
-          repo = "easy-hls-nix";
-          rev = "db85cac9d0405b4769b75cba0b004aed3beaf2de";
-          sha256 = "sha256-Y592D1EpSGm7gDig+k8G8y3u6k5UXBd+My1Th6txzoI=";
-        };
-        easy-hls =
-          pkgs.callPackage easy-hls-src { ghcVersions = [ "8.10.4" ]; };
-      in (with pkgs.haskellPackages; [
+      buildInputs = (with pkgs.haskellPackages; [
         ormolu
         hlint
         ghcid
@@ -314,8 +225,7 @@ let
         stack
         hasktags
         ghc
-      ]) ++ (when withVSCode [ pkgs.haskellPackages.haskell-language-server ])
-      ++ (when withLsp [ easy-hls ]);
+      ]) ++ (when withLsp [ pkgs.haskellPackages.haskell-language-server ]);
     }
     {
       enabled = withRust;
@@ -325,14 +235,7 @@ let
     }
     {
       enabled = withPurescript;
-      buildInputs = let
-        purescript = import (pkgs.fetchFromGitHub {
-          owner = "justinwoo";
-          repo = "easy-purescript-nix";
-          rev = "7802db65618c2ead3a55121355816b4c41d276d9";
-          sha256 = "sha256-uAS889Rpl//h0Ne2M7NyNk6tDFOkr9O3R8yny3qHKVk=";
-        }) { pkgs = pkgs; };
-      in (with purescript; [ spago purs zephyr ]);
+      buildInputs = [ pkgs.spago pkgs.purescript ];
       emacsConfig = elisp "purescript";
       emacsPkgs = epkgs: [ epkgs.purescript-mode epkgs.psci epkgs.psc-ide ];
     }
@@ -343,34 +246,15 @@ let
     }
     {
       name = "nodejs";
-      enabled = withReason || withRescript;
+      enabled = withJavascript || withRescript || withPurescript
+        || withTypescript;
       buildInputs = [ pkgs.nodejs pkgs.nodePackages.pnpm ];
     }
     {
       enabled = withRescript;
-      emacsPkgs = epkgs: [ epkgs.reason-mode ];
+      emacsPkgs = epkgs:
+        [ epkgs.rescript-mode ] ++ (when withLsp [ epkgs.lsp-rescript ]);
       emacsConfig = elisp "rescript";
-    }
-    {
-      enabled = withReason;
-      buildInputs = [ pkgs.bs-platform ];
-      emacsPkgs = epkgs: [ epkgs.reason-mode ];
-      emacsConfig = elisp "reason";
-      vscodeExtensions = vpkgs:
-        (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-          {
-            name = "reason-vscode";
-            publisher = "jaredly";
-            version = "1.7.13";
-            sha256 = "09pcvdzlk46cm5haqw58hm4bij8lwq3xf1kk9l4ny5x0gz11vs0j";
-          }
-          {
-            name = "reasonml";
-            publisher = "freebroccolo";
-            version = "1.0.38";
-            sha256 = "1nay6qs9vcxd85ra4bv93gg3aqg3r2wmcnqmcsy9n8pg1ds1vngd";
-          }
-        ]);
     }
     {
       enabled = withTypescript;
@@ -382,37 +266,23 @@ let
       emacsConfig = elisp "evil";
     }
     {
-      enabled = withReasonNative;
-      buildInputs = [ pkgs.ocamlPackages.reason ];
-    }
-    {
       name = "ocaml";
-      enabled = withOcaml || withReasonNative || withReason;
+      enabled = withOcaml;
       buildInputs =
         [ pkgs.dune_2 pkgs.opam pkgs.ocaml pkgs.ocamlPackages.merlin ];
       emacsPkgs = epkgs: [ epkgs.tuareg ];
     }
     {
       enabled = withX;
+      buildInputs = with pkgs; [ fontconfig ];
       emacsPkgs = epkgs: [
         epkgs.all-the-icons
         epkgs.all-the-icons-dired
+        # todo: figure out the right font...
+        # epkgs.all-the-icons-ivy
         epkgs.all-the-icons-ivy-rich
       ];
       emacsConfig = elisp "gfx";
-    }
-    {
-      enabled = withX && withOpenGL;
-      buildInputs = (when withIntel [ nixGL.nixGLIntel ]);
-    }
-    {
-      enabled = withX && withVulkan;
-      buildInputs = [
-        pkgs.vulkan-loader
-        pkgs.vulkan-validation-layers
-        pkgs.vulkan-headers
-        pkgs.vulkan-tools
-      ] ++ (when withIntel [ nixGL.nixVulkanIntel ]);
     }
     {
       enabled = withJson;
@@ -460,16 +330,8 @@ let
             sha256 = "1zin7s827bpf9yvzpxpr5n6mv0b5rhh3civsqzmj52mdq365d2js";
           }
         ]);
-      buildInputs = let
-        dhall = import (pkgs.fetchFromGitHub {
-          owner = "justinwoo";
-          repo = "easy-dhall-nix";
-          rev = "aa1dafc30d36bd4609ead0faaee66e44f617f981";
-          sha256 = "0n1ry6785j44kl4zp74vlvj20ik8gqh7zw9pc2g6arhh77vxhhir";
-        }) { pkgs = pkgs; };
-      in (with dhall;
-        [ dhall-simple dhall-json-simple dhall-yaml-simple dhall-docs-simple ]
-        ++ (when withLsp [ dhall-lsp-simple ]));
+      buildInputs = (with pkgs;
+        [ dhall dhall-json dhall-docs ] ++ (when withLsp [ dhall-lsp-server ]));
     }
     {
       enabled = withProtobuf;
@@ -497,13 +359,9 @@ let
         [ epkgs.markdown-mode ] ++ (when withOrg [ epkgs.ox-gfm ]);
     }
     {
-      enabled = withPdf;
-      emacsPkgs = epkgs: [ epkgs.pdf-tools ];
-    }
-    {
       enabled = withOrg;
       emacsConfig = elisp "org";
-      emacsPkgs = epkgs: [ epkgs.org epkgs.org-plus-contrib ];
+      emacsPkgs = epkgs: [ epkgs.org ];
     }
     {
       enabled = withAts;
@@ -519,19 +377,18 @@ let
       buildInputs = with pkgs; [ notmuch msmtp dovecot_pigeonhole isync ];
       emacsPkgs = epkgs:
         [
-          (epkgs.melpaBuild {
-            pname = "notmuch";
-            src = pkgs.notmuch.src;
-            version = pkgs.notmuch.version;
-            nativeBuildInputs = [ pkgs.pkg-config ];
-            buildInputs = pkgs.notmuch.buildInputs;
-            patches = [
-              ./patches/0001-wip-add-notmuch-progressive-search-custom.patch
-            ];
-            recipe = pkgs.writeText "recipe" ''
-              (notmuch :url "https://git.notmuchmail.org/git/notmuch" :fetcher git :files ("emacs/*.el" "emacs/*.png"))
-            '';
-
+          (epkgs.notmuch.override {
+            elpaBuild = args:
+              epkgs.elpaBuild (args // {
+                patches = [
+                  (pkgs.fetchpatch {
+                    url =
+                      "https://github.com/TristanCacqueray/notmuch/commit/26f21e89649a2e1abd842fb6b212cb8ec69ff392.patch";
+                    sha256 =
+                      "sha256-dUQ2Ugyu6wsOpKivwKh3cnpxT03725nhPdW2hYeLVVU=";
+                  })
+                ];
+              });
           })
         ];
     }
@@ -567,15 +424,7 @@ let
   };
 
   # the emacs derivation
-  emacs-overlay = import (pkgs.fetchFromGitHub {
-    owner = "nix-community";
-    repo = "emacs-overlay";
-    rev = "23c8464f4527a2b19f6b4776378dd03b8289aa85";
-    sha256 = "sha256-XmXmV7ddohRKXcVzVDdw6LB0/53gu+rjQ+vScdakKGM=";
-  }) pkgs pkgs;
-
-  emacsDrv =
-    if withX then emacs-overlay.emacsGit else emacs-overlay.emacsGit-nox;
+  emacsDrv = if withX then pkgs.emacs else pkgs.emacs-nox;
 
   emacsOverride = self: super: {
     spinner = super.spinner.override {
@@ -590,7 +439,7 @@ let
     };
   };
 
-  emacs = ((pkgs.emacsPackagesGen emacsDrv).overrideScope'
+  emacs = ((pkgs.emacsPackagesFor emacsDrv).overrideScope'
     emacsOverride).emacsWithPackages (epkgs:
       (let
         # the emacs config:
@@ -601,48 +450,6 @@ let
             (setq gc-cons-threshold (* 20 1024 1024))'');
 
         # emacs packages:
-        language-id-src = pkgs.fetchFromGitHub {
-          owner = "lassik";
-          repo = "emacs-language-id";
-          rev = "30a5bc267af7de167d0a835ead828016e6e7e14c";
-          sha256 = "1wkppwh72zs8b4jqdxqpf3gikh11la03nkj8nna9bg7k8n0a4vaq";
-        };
-        format-all-src = pkgs.fetchFromGitHub {
-          owner = "lassik";
-          repo = "emacs-format-all-the-code";
-          rev = "351057f7efde71dcd4b6c5eadcbcfcd8d53d2a47";
-          sha256 = "1cicxsckmqh8zmad0dggsnvk72j37kdsyv0z5266ri7kb184awb4";
-        };
-        language-id = (epkgs.melpaBuild {
-          pname = "language-id";
-          src = language-id-src;
-          version = "1";
-          recipe = pkgs.writeText "recipe" ''
-            (language-id :repo "lassik/emacs-language-id" :fetcher github :files ("*.el"))
-          '';
-        });
-        format-all = (epkgs.melpaBuild {
-          pname = "format-all";
-          src = format-all-src;
-          version = "1";
-          packageRequires = [ language-id ];
-          recipe = pkgs.writeText "recipe" ''
-            (format-all :repo "lassik/emacs-format-all-the-code" :fetcher github :files ("*.el"))
-          '';
-        });
-        inheritenv = (epkgs.melpaBuild {
-          pname = "inheritenv";
-          version = "0.1";
-          src = pkgs.fetchFromGitHub {
-            owner = "purcell";
-            repo = "inheritenv";
-            rev = "0.1";
-            sha256 = "0ygzf70vfb7qwpsllcq5i3brprsnx3sxy2zng02mzwrr5jkx4ypc";
-          };
-          recipe = pkgs.writeText "recipe" ''
-            (inheritenv :repo "purcell/inheritenv" :fetcher github :files ("*.el"))
-          '';
-        });
         ivy = [
           epkgs.smex
           epkgs.ivy
@@ -652,7 +459,7 @@ let
           epkgs.projectile
           epkgs.ivy-rich
         ];
-        prog = [ epkgs.flycheck format-all inheritenv ];
+        prog = [ epkgs.flycheck epkgs.format-all ];
         base = [
           (pkgs.runCommand "default.el" { } ''
             mkdir -p $out/share/emacs/site-lisp
@@ -696,7 +503,7 @@ let
 
       set listchars=trail:·
       set list
-          '' + (concatModuleText (m: m.vimConfig));
+    '' + (concatModuleText (m: m.vimConfig));
   };
 
   # code
@@ -709,31 +516,8 @@ let
   # pycharm
   pycharm = pkgs.jetbrains.pycharm-community;
 
-  # openGL
-  nixGL = import (pkgs.fetchFromGitHub
-    (builtins.fromJSON (builtins.readFile ./nixGL.json))) {
-      pkgs = pkgs;
-      enable32bits = false;
-    };
-
-  base = (with pkgs; [
-    bash
-    fontconfig
-    hack-font
-    ripgrep
-    man
-    findutils
-    glibcLocales
-    pkgconfig
-    systemd
-    libnotify
-    openssl
-  ]);
-
-  env-vars = ''
-    export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib/:/run/opengl-driver/lib/
-    export NIX_PATH=nixpkgs=${nixpkgs_src}
-  '' + (if withAts then ''
+  # export LD_LIBRARY_PATH=${pkgs.stdenv.cc.cc.lib}/lib/:/run/opengl-driver/lib/
+  profile = "" + (if withAts then ''
     export ATS_LOADPATH=${pkgs.ats2}/share/emacs/site-lisp/ats2
   '' else
     "") + (if withX then ''
@@ -741,27 +525,18 @@ let
     '' else
       "");
 
-  profile = pkgs.writeScriptBin "devenv-profile" env-vars;
-
   # devenv derivations collection:
-  devenv = (when withEmacs [ emacs ]) ++ (when withVim [ vim ])
-    ++ (when withVSCode [ vscode ]) ++ (when withPyCharm [ pycharm ])
-    ++ (when withRuntime
-      ((when withBaseTools base) ++ concatModuleList (m: m.buildInputs)));
+  toolchains = concatModuleList (m: m.buildInputs);
 
   # share the pinned nixpkgs
   nixpkgs_src =
     pkgs.fetchFromGitHub (builtins.fromJSON (builtins.readFile ./nixpkgs.json));
 
-  shellEnv = pkgs.mkShell {
-    buildInputs = devenv;
-    shellHook = env-vars;
-  };
-
-in if pkgs.lib.inNixShell then
-  shellEnv
-else {
+in {
   profile = profile;
-  devenv = devenv;
-  shellEnv = shellEnv;
+  pycharm = pycharm;
+  emacs = emacs;
+  vim = vim;
+  vscode = vscode;
+  toolchains = toolchains;
 }
