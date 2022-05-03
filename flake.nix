@@ -30,7 +30,7 @@
                   #!/bin/sh
                   export NIX_PATH=nixpkgs=${nixpkgs}
                   ${devenv.profile}
-                  exec ${editor}/bin/${command}
+                  exec ${editor}/bin/${command} $*
                 '';
               in "${wrapper}/bin/${command}-wrapper";
             };
