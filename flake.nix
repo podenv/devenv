@@ -96,6 +96,7 @@
         withTypescript = true;
         withMarkdown = true;
         withRestructuredText = true;
+        withX = true;
       };
 
       complete = essentials // {
