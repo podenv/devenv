@@ -390,6 +390,7 @@ let
                 ];
               });
           })
+          epkgs.ol-notmuch
         ];
     }
     {
