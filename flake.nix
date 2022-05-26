@@ -119,6 +119,7 @@
         withW3M = true;
         withDarcs = true;
         withHy = true;
+        withGraphviz = true;
       };
 
     in pkgs.lib.foldr pkgs.lib.recursiveUpdate { } [

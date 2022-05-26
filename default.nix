@@ -20,7 +20,8 @@ withNotMuch ? false,
 # language
 withC ? false, withPython ? false, withHaskell ? false, withErlang ? false
 , withElixir ? false, withGleam ? false, withNix ? false, withAts ? false
-, withGLSL ? false, withGo ? false, withTypescript ? false, withRust ? false,
+, withGLSL ? false, withGo ? false, withTypescript ? false, withRust ? false
+, withGraphviz ? false,
 # lisp
 withHy ? false, withRacket ? false,
 # conf
@@ -108,6 +109,10 @@ let
     {
       enabled = withShake;
       buildInputs = with pkgs; [ haskellPackages.shake ];
+    }
+    {
+      enabled = withGraphviz;
+      emacsPkgs = epkgs: [ epkgs.graphviz-dot-mode ];
     }
     {
       enabled = withDarcs;
