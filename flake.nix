@@ -120,6 +120,7 @@
         withDarcs = true;
         withHy = true;
         withGraphviz = true;
+        withLean = true;
       };
 
     in pkgs.lib.foldr pkgs.lib.recursiveUpdate { } [

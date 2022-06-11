@@ -21,7 +21,7 @@ withNotMuch ? false,
 withC ? false, withPython ? false, withHaskell ? false, withErlang ? false
 , withElixir ? false, withGleam ? false, withNix ? false, withAts ? false
 , withGLSL ? false, withGo ? false, withTypescript ? false, withRust ? false
-, withGraphviz ? false,
+, withGraphviz ? false, withLean ? false,
 # lisp
 withHy ? false, withRacket ? false,
 # conf
@@ -117,6 +117,33 @@ let
     {
       enabled = withDarcs;
       buildInputs = [ pkgs.darcs ];
+    }
+    {
+      enabled = withLean;
+      emacsConfig = "(require 'lean4-mode)";
+      emacsPkgs = epkgs:
+        [
+          (epkgs.trivialBuild {
+            pname = "lean4-mode";
+            src = pkgs.fetchFromGitHub {
+              owner = "leanprover";
+              repo = "lean4-mode";
+              rev = "c10def33f603a43f20a4d32d820b61f7ee5dbe5a";
+              sha256 = "sha256-AVlr4+WGtJR9DGW/RBq+xNBlyrdmy6cg9dayKHGZowI=";
+            };
+            # Somehow, batch batch-byte-compile fails with:
+            #   lean4-input.el:188:1: Error: Lisp nesting exceeds `max-lisp-eval-depth'
+            # Thus, this buildPhase overrides the value in a way that doesn't file compilation
+            buildPhase = ''
+              runHook preBuild
+              emacs -L . --eval '(setq max-lisp-eval-depth 4000 max-specpdl-size 4000)' --batch -f batch-byte-compile *.el
+              runHook postBuild
+            '';
+            buildInputs =
+              [ epkgs.f epkgs.lsp-mode epkgs.magit-section epkgs.flycheck ];
+            version = "1";
+          })
+        ];
     }
     {
       enabled = withW3M;
