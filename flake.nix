@@ -108,6 +108,7 @@
         withPurescript = true;
         withGleam = true;
         withGLSL = true;
+        withKubernetes = true;
         withPlantuml = true;
         withProtobuf = true;
         withThrift = true;

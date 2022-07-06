@@ -25,7 +25,7 @@ withC ? false, withPython ? false, withHaskell ? false, withErlang ? false
 # lisp
 withHy ? false, withRacket ? false,
 # conf
-withDhall ? false, withJson ? false, withYaml ? false,
+withDhall ? false, withJson ? false, withYaml ? false, withKubernetes ? false,
 # idl
 withPlantuml ? false, withProtobuf ? false, withThrift ? false,
 # network
@@ -158,6 +158,10 @@ let
     {
       enabled = withHy;
       emacsPkgs = epkgs: [ epkgs.hy-mode ];
+    }
+    {
+      enabled = withKubernetes;
+      emacsPkgs = epkgs: [ epkgs.kubernetes ];
     }
     {
       enabled = withGo;
