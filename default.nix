@@ -515,7 +515,7 @@ let
           epkgs.diminish
           epkgs.ripgrep
           epkgs.bufler
-          epkgs.iedit
+          epkgs.deadgrep
           epkgs.ace-window
           epkgs.ace-link
           epkgs.avy
