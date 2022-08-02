@@ -397,7 +397,7 @@ let
     {
       enabled = withOrg;
       emacsConfig = elisp "org";
-      emacsPkgs = epkgs: [ epkgs.org ];
+      emacsPkgs = epkgs: [ epkgs.org epkgs.org-roam ];
     }
     {
       enabled = withAts;
