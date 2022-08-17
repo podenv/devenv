@@ -12,7 +12,7 @@
     let
       pkgs = import nixpkgs {
         localSystem = "x86_64-linux";
-        overlays = [ emacs-overlay.overlay rust-overlay.overlay ];
+        overlays = [ emacs-overlay.overlay rust-overlay.overlays.default ];
       };
 
       devent = import ./default.nix;
