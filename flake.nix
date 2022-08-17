@@ -122,6 +122,7 @@
         withHy = true;
         withGraphviz = true;
         withLean = true;
+        withRescript = true;
       };
 
     in pkgs.lib.foldr pkgs.lib.recursiveUpdate { } [
