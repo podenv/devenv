@@ -397,7 +397,7 @@ let
     {
       enabled = withOrg;
       emacsConfig = elisp "org";
-      emacsPkgs = epkgs: [ epkgs.org epkgs.org-roam ];
+      emacsPkgs = epkgs: [ epkgs.org epkgs.org-roam epkgs.org-present ];
     }
     {
       enabled = withAts;
@@ -520,6 +520,7 @@ let
           epkgs.ace-link
           epkgs.avy
           epkgs.doom-modeline
+          epkgs.visual-fill-column
         ] ++ ivy ++ prog;
       in base ++ (concatModuleList (m: m.emacsPkgs epkgs))));
 
