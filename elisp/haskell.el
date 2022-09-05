@@ -2,7 +2,7 @@
   :config
   ;; ensure run-haskell uses the simplest ghci subprocess
   (setq-default haskell-process-type 'auto)
-  (add-hook 'haskell-mode-hook 'ormolu-format-on-save-mode)
+  ;; (add-hook 'haskell-mode-hook 'ormolu-format-on-save-mode)
   (add-hook 'haskell-mode-hook 'haskell-auto-insert-module-template)
   ;; configure interactive mode
   (require 'haskell-interactive-mode)
