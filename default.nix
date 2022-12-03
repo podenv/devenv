@@ -83,9 +83,12 @@ let
       name = "git";
       minimal = true;
       emacsConfig = elisp "magit";
-      emacsPkgs = epkgs:
-        [ epkgs.magit epkgs.forge epkgs.ghub ]
-        ++ (when withX [ epkgs.git-gutter ]);
+      emacsPkgs = epkgs: [
+        epkgs.magit
+        epkgs.forge
+        epkgs.ghub
+        epkgs.git-gutter
+      ];
       buildInputs = [ pkgs.openssh pkgs.git pkgs.gitAndTools.hub ];
     }
     {
@@ -128,8 +131,8 @@ let
             src = pkgs.fetchFromGitHub {
               owner = "leanprover";
               repo = "lean4-mode";
-              rev = "c10def33f603a43f20a4d32d820b61f7ee5dbe5a";
-              sha256 = "sha256-AVlr4+WGtJR9DGW/RBq+xNBlyrdmy6cg9dayKHGZowI=";
+              rev = "37d5c99b7b29c80ab78321edd6773200deb0bca6";
+              sha256 = "sha256-+dRaXB7uvN/weSZiKcfSKWhcdJVNg9Vg8k0pJkDNjpc=";
             };
             # Somehow, batch batch-byte-compile fails with:
             #   lean4-input.el:188:1: Error: Lisp nesting exceeds `max-lisp-eval-depth'
@@ -411,23 +414,22 @@ let
     {
       enabled = withNotMuch;
       buildInputs = with pkgs; [ notmuch msmtp dovecot_pigeonhole isync ];
-      emacsPkgs = epkgs:
-        [
-          (epkgs.notmuch.override {
-            elpaBuild = args:
-              epkgs.elpaBuild (args // {
-                patches = [
-                  (pkgs.fetchpatch {
-                    url =
-                      "https://github.com/TristanCacqueray/notmuch/commit/26f21e89649a2e1abd842fb6b212cb8ec69ff392.patch";
-                    sha256 =
-                      "sha256-dUQ2Ugyu6wsOpKivwKh3cnpxT03725nhPdW2hYeLVVU=";
-                  })
-                ];
-              });
-          })
-          epkgs.ol-notmuch
-        ];
+      emacsPkgs = epkgs: [
+        (epkgs.notmuch.override {
+          elpaBuild = args:
+            epkgs.elpaBuild (args // {
+              patches = [
+                (pkgs.fetchpatch {
+                  url =
+                    "https://github.com/TristanCacqueray/notmuch/commit/26f21e89649a2e1abd842fb6b212cb8ec69ff392.patch";
+                  sha256 =
+                    "sha256-dUQ2Ugyu6wsOpKivwKh3cnpxT03725nhPdW2hYeLVVU=";
+                })
+              ];
+            });
+        })
+        epkgs.ol-notmuch
+      ];
     }
     {
       enabled = withLsp;
