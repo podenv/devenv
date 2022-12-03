@@ -18,7 +18,6 @@ let
     withPython = true;
     withRpm = true;
     withDhall = true;
-    withNeuron = true;
     withGLSL = true;
     withProtobuf = true;
     withPlantuml = true;

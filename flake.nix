@@ -100,7 +100,6 @@
       };
 
       complete = essentials // {
-        withNeuron = true;
         withOrg = true;
         withNotMuch = true;
         withErlang = true;

@@ -14,7 +14,7 @@ withCodeVim ? false,
 # rcs
 withGit ? false, withDarcs ? false, withGerrit ? false,
 # notes
-withNeuron ? false, withOrg ? false,
+withOrg ? false,
 # mails
 withNotMuch ? false,
 # language
@@ -428,22 +428,6 @@ let
           })
           epkgs.ol-notmuch
         ];
-    }
-    {
-      enabled = withNeuron;
-      buildInputs = [ (import ./neuron.nix { pkgs = pkgs; }) ];
-      emacsPkgs = epkgs:
-        [
-          (epkgs.neuron-mode.overrideAttrs (old: {
-            src = pkgs.fetchFromGitHub {
-              owner = "felko";
-              repo = "neuron-mode";
-              rev = "d769042ca0b715c8da7947421302b52222598e95";
-              sha256 = "0804ixy7q9jnw6nw8g71dx4isndca1jkwpkjb8k71ckwvvz63i17";
-            };
-          }))
-        ];
-      emacsConfig = elisp "neuron";
     }
     {
       enabled = withLsp;
