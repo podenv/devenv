@@ -6,7 +6,6 @@
       (format-all-mode)
       (psc-ide-mode)
       (company-mode)
-      (flycheck-mode)
       (turn-on-purescript-indentation)
 )))
 (use-package psci)

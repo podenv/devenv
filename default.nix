@@ -143,7 +143,7 @@ let
               runHook postBuild
             '';
             buildInputs =
-              [ epkgs.f epkgs.magit-section epkgs.flycheck ];
+              [ epkgs.f epkgs.magit-section ];
             version = "1";
           })
         ];
@@ -189,7 +189,6 @@ let
           ++ [ virtualenv pip mypy black flake8 pyyaml ]))
       ];
       emacsConfig = elisp "python";
-      emacsPkgs = epkgs: [ epkgs.flycheck-mypy ];
       vscodeExtensions = vsext: [ vsext.ms-python.python ];
     }
     {
@@ -476,7 +475,7 @@ let
           epkgs.projectile
           epkgs.ivy-rich
         ];
-        prog = [ epkgs.flycheck epkgs.format-all ];
+        prog = [ epkgs.format-all ];
         base = [
           (pkgs.runCommand "default.el" { } ''
             mkdir -p $out/share/emacs/site-lisp

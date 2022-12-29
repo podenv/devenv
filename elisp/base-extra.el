@@ -29,31 +29,6 @@
   :ensure t
   :init (ivy-rich-mode 1))
 
-;; Setup flycheck
-(use-package flycheck
-  :hook (prog-mode . flycheck-mode)
-  :bind (("<f3>" . flycheck-next-error))
-  :config
-  (global-flycheck-mode)
-  ;; Only do flycheck on save
-  (setq flycheck-check-syntax-automatically '(save mode-enable))
-
-  ;; Enable next/prev error to cycle, from https://github.com/flycheck/flycheck/issues/64
-  (defun flycheck-next-error-loop-advice (orig-fun &optional n reset)
-    (condition-case err
-        (apply orig-fun (list n reset))
-      ((user-error)
-       (let ((error-count (length flycheck-current-errors)))
-         (if (and
-              (> error-count 0)
-              (equal (error-message-string err) "No more Flycheck errors"))
-             (let* ((req-n (if (numberp n) n 1))
-                    (curr-pos (if (> req-n 0) (- error-count 1) 0))
-                    (next-pos (mod (+ curr-pos req-n) error-count)))
-               (apply orig-fun (list (+ 1 next-pos) 'reset)))
-           (signal (car err) (cdr err)))))))
-  (advice-add 'flycheck-next-error :around #'flycheck-next-error-loop-advice))
-
 (use-package diff-hl
   :config
   (setq diff-hl-draw-borders nil)

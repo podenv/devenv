@@ -243,6 +243,11 @@
 ;; for lsp
 (require 'eglot)
 
+(use-package flymake
+  :hook (prog-mode . flymake-mode)
+  :bind (("<f3>" . flymake-goto-next-error))
+)
+
 ;; utility
 (defun generate-scratch-buffer ()
   "Create and switch to a temporary scratch buffer with a random
