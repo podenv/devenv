@@ -143,7 +143,7 @@ let
               runHook postBuild
             '';
             buildInputs =
-              [ epkgs.f epkgs.lsp-mode epkgs.magit-section epkgs.flycheck ];
+              [ epkgs.f epkgs.magit-section epkgs.flycheck ];
             version = "1";
           })
         ];
@@ -239,8 +239,7 @@ let
       name = "haskell";
       emacsConfig = elisp "haskell";
       emacsPkgs = epkgs:
-        [ epkgs.haskell-mode epkgs.ormolu ]
-        ++ (when withLsp [ epkgs.lsp-haskell ]);
+        [ epkgs.haskell-mode epkgs.ormolu ];
       vscodeExtensions = vsext:
         (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
           {
@@ -431,11 +430,6 @@ let
         epkgs.ol-notmuch
       ];
     }
-    {
-      enabled = withLsp;
-      emacsConfig = elisp "lsp";
-      emacsPkgs = epkgs: [ epkgs.lsp-mode epkgs.lsp-ui epkgs.lsp-ivy ];
-    }
   ]);
 
   concatModuleText = f: builtins.concatStringsSep "\n" (map f modules);
@@ -447,7 +441,7 @@ let
   };
 
   # the emacs derivation
-  emacsDrv = if withX then pkgs.emacs else pkgs.emacs-nox;
+  emacsDrv = if withX then pkgs.emacsPgtk else pkgs.emacsGit-nox;
 
   emacsOverride = self: super: {
     spinner = super.spinner.override {

@@ -240,6 +240,9 @@
    eshell-hist-ignoredups t
    ))
 
+;; for lsp
+(require 'eglot)
+
 ;; utility
 (defun generate-scratch-buffer ()
   "Create and switch to a temporary scratch buffer with a random

@@ -17,9 +17,3 @@
    haskell-process-log t)
   )
 (use-package ormolu)
-
-(use-package lsp-haskell
-  :requires lsp)
-
-(setq lsp-haskell-server-wrapper-function
-      (lambda (argv) (append (list "nix" "develop" "--command") argv)))
