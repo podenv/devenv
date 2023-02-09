@@ -37,7 +37,7 @@ withAnsible ? false,
 # web
 withW3M ? false, withGraphQL ? false, withCss ? false,
 # text
-withMarkdown ? false, withRestructuredText ? false,
+withMarkdown ? false, withRestructuredText ? false, withSpellChecker ? false,
 # wip language
 withIdris ? false, withOcaml ? false,
 # javascript language
@@ -96,6 +96,11 @@ let
       buildInputs = [ pkgs.git-review ];
     }
     {
+      enabled = withSpellChecker;
+      buildInputs = [ pkgs.aspell pkgs.aspellDicts.en ];
+      emacsPkgs = epkgs: [ epkgs.flymake-aspell ];
+    }
+    {
       enabled = withTools;
       buildInputs = with pkgs; [
         which
@@ -142,8 +147,7 @@ let
               emacs -L . --eval '(setq max-lisp-eval-depth 4000 max-specpdl-size 4000)' --batch -f batch-byte-compile *.el
               runHook postBuild
             '';
-            buildInputs =
-              [ epkgs.f epkgs.magit-section ];
+            buildInputs = [ epkgs.f epkgs.magit-section ];
             version = "1";
           })
         ];
@@ -237,8 +241,7 @@ let
       enabled = withHaskell;
       name = "haskell";
       emacsConfig = elisp "haskell";
-      emacsPkgs = epkgs:
-        [ epkgs.haskell-mode epkgs.ormolu ];
+      emacsPkgs = epkgs: [ epkgs.haskell-mode epkgs.ormolu ];
       vscodeExtensions = vsext:
         (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
           {
