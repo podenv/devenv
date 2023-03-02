@@ -18,6 +18,10 @@ And it supports four editors:
 
 ## Use
 
+Setup base environment for clibs and nixGL (which needs `--impure` for NVidia):
+
+- `nix develop --impure github:podenv/devenv`
+
 Run the editor with the normal flavor:
 
 - `nix run github:podenv/devenv#emacs-nox`

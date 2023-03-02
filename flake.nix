@@ -2,9 +2,12 @@
   description = "devenv editor";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/da60f2dc9c95692804fa6575fa467e659de5031b";
-    emacs-overlay.url = "github:nix-community/emacs-overlay/8ad6bfa7413d59d408bf1ea8680a03b17a949082";
-    rust-overlay.url = "github:oxalica/rust-overlay/a0d5773275ecd4f141d792d3a0376277c0fc0b65";
+    nixpkgs.url =
+      "github:NixOS/nixpkgs/3665c429d349fbda46b0651e554cca8434452748";
+    emacs-overlay.url =
+      "github:nix-community/emacs-overlay/8ad6bfa7413d59d408bf1ea8680a03b17a949082";
+    rust-overlay.url =
+      "github:oxalica/rust-overlay/a0d5773275ecd4f141d792d3a0376277c0fc0b65";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -13,6 +16,8 @@
       pkgs = import nixpkgs {
         localSystem = "x86_64-linux";
         overlays = [ emacs-overlay.overlay rust-overlay.overlays.default ];
+        # allowUnfree for nvidia
+        config.allowUnfree = true;
       };
 
       devent = import ./default.nix;
@@ -125,7 +130,54 @@
         withRescript = true;
       };
 
+      mkShell = xs:
+        pkgs.mkShell {
+          buildInputs = with pkgs; [ nix pkg-config zlib gcc ripgrep ] ++ xs;
+        };
+
+      nixGLSrc = pkgs.fetchFromGitHub {
+        owner = "guibou";
+        repo = "nixGL";
+        rev = "c917918ab9ebeee27b0dd657263d3f57ba6bb8ad";
+        sha256 = "sha256-KCkWZXCjH+C4Kn7fUGSrEl5btk+sERHhZueSsvVbPWc=";
+      };
+      nixGL = import nixGLSrc { pkgs = pkgs; };
+
+      gfxShell = with pkgs;
+        mkShell [
+          nixGL.auto.nixGLDefault
+          nixGL.auto.nixVulkanNvidia
+          nixGL.nixVulkanIntel
+          vulkan-tools
+          vulkan-loader
+          libGLU
+          libGL
+          glew
+          xorg.libX11
+          xorg.xrandr
+          xorg.libXcursor
+          xorg.libXxf86vm
+          xorg.libXinerama
+          xorg.libXrandr
+          xorg.libXi
+          xorg.libXext
+          glslang
+          vulkan-validation-layers
+          opusfile
+          openal
+          xorg.libXdmcp
+          vulkan-tools-lunarg
+          SDL
+          SDL2
+          wayland
+          wayland-protocols
+          glm
+          directfb
+          gmp
+        ];
+
     in pkgs.lib.foldr pkgs.lib.recursiveUpdate { } [
+      { devShell."x86_64-linux" = gfxShell; }
       (get_runtime "-minimal" base)
       (get_runtime "" essentials)
       (get_runtime "-complete" complete)
