@@ -257,15 +257,6 @@ let
             sha256 = "0ab7m5jzxakjxaiwmg0jcck53vnn183589bbxh3iiylkpicrv67y";
           }
         ]);
-      buildInputs = (with pkgs.haskellPackages; [
-        ormolu
-        hlint
-        ghcid
-        cabal-install
-        stack
-        hasktags
-        ghc
-      ]) ++ (when withLsp [ pkgs.haskellPackages.haskell-language-server ]);
     }
     {
       enabled = withRust;
