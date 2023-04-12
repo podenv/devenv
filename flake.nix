@@ -108,22 +108,16 @@
         withErlang = true;
         withElixir = true;
         withPurescript = true;
-        withGleam = true;
         withGLSL = true;
-        withKubernetes = true;
         withPlantuml = true;
         withProtobuf = true;
         withThrift = true;
         withAnsible = true;
         withGraphQL = true;
-        withIdris = true;
-        withOcaml = true;
-        withElm = true;
         withW3M = true;
         withDarcs = true;
         withHy = true;
         withGraphviz = true;
-        withLean = true;
         withRescript = true;
       };
 
