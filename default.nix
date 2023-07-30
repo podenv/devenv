@@ -434,7 +434,7 @@ let
   };
 
   # the emacs derivation
-  emacsDrv = if withX then pkgs.emacsGit else pkgs.emacsGit-nox;
+  emacsDrv = if withX then pkgs.emacs-git else pkgs.emacs-git-nox;
 
   emacsOverride = self: super: {
     spinner = super.spinner.override {

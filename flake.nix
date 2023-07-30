@@ -2,8 +2,8 @@
   description = "devenv editor";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/3665c429d349fbda46b0651e554cca8434452748";
-    emacs-overlay.url = "github:nix-community/emacs-overlay/29a93f82abd706561032c31ce59a0e94b3e7963f";
+    nixpkgs.url = "github:NixOS/nixpkgs/e86120df5ca5ae75a94e8ce5b74bfdf89b1bc1e7";
+    emacs-overlay.url = "github:nix-community/emacs-overlay/5148f0e35c9b884eec954113941c4292f60e55fa";
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
