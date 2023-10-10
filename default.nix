@@ -235,7 +235,7 @@ let
     }
     {
       enabled = withGleam;
-      # emacsPkgs = epkgs: [ epkgs.gleam-mode ];
+      emacsPkgs = epkgs: [ epkgs.gleam-mode ];
     }
     {
       enabled = withHaskell;
@@ -469,7 +469,7 @@ let
           epkgs.projectile
           epkgs.ivy-rich
         ];
-        prog = [ epkgs.format-all ];
+        prog = [ epkgs.format-all epkgs.tree-sitter epkgs.tree-sitter-indent ];
         base = [
           (pkgs.runCommand "default.el" { } ''
             mkdir -p $out/share/emacs/site-lisp
