@@ -111,6 +111,7 @@
         withGLSL = true;
         withPlantuml = true;
         withProtobuf = true;
+        withCapnp = true;
         withThrift = true;
         withAnsible = true;
         withGraphQL = true;

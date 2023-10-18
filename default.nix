@@ -27,7 +27,7 @@ withHy ? false, withRacket ? false,
 # conf
 withDhall ? false, withJson ? false, withYaml ? false, withKubernetes ? false,
 # idl
-withPlantuml ? false, withProtobuf ? false, withThrift ? false,
+withPlantuml ? false, withProtobuf ? false, withThrift ? false, withCapnp ? false,
 # network
 withRest ? false,
 # packaging
@@ -367,6 +367,10 @@ let
     {
       enabled = withProtobuf;
       emacsPkgs = epkgs: [ epkgs.protobuf-mode ];
+    }
+    {
+      enabled = withCapnp;
+      emacsPkgs = epkgs: [ epkgs.capnp-mode ];
     }
     {
       enabled = withRest;
