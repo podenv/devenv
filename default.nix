@@ -20,14 +20,15 @@ withNotMuch ? false,
 # language
 withC ? false, withPython ? false, withHaskell ? false, withErlang ? false
 , withElixir ? false, withGleam ? false, withNix ? false, withAts ? false
-, withGLSL ? false, withGo ? false, withTypescript ? false, withRust ? false
-, withGraphviz ? false, withLean ? false,
+, withGLSL ? false, withWGSL ? false, withGo ? false, withTypescript ? false
+, withRust ? false, withGraphviz ? false, withLean ? false,
 # lisp
 withHy ? false, withRacket ? false,
 # conf
 withDhall ? false, withJson ? false, withYaml ? false, withKubernetes ? false,
 # idl
-withPlantuml ? false, withProtobuf ? false, withThrift ? false, withCapnp ? false,
+withPlantuml ? false, withProtobuf ? false, withThrift ? false
+, withCapnp ? false,
 # network
 withRest ? false,
 # packaging
@@ -406,6 +407,10 @@ let
     {
       enabled = withGLSL;
       emacsPkgs = epkgs: [ epkgs.glsl-mode ];
+    }
+    {
+      enabled = withWGSL;
+      emacsPkgs = epkgs: [ epkgs.wgsl-mode ];
     }
     {
       enabled = withNotMuch;

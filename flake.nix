@@ -109,6 +109,7 @@
         withElixir = true;
         withPurescript = true;
         withGLSL = true;
+        withWGSL = true;
         withPlantuml = true;
         withProtobuf = true;
         withCapnp = true;
