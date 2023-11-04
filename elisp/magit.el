@@ -10,9 +10,9 @@
 (use-package forge
   :after magit)
 
-(use-package git-gutter
-  :config
-  (global-git-gutter-mode +1)
-  (setq git-gutter:modified-sign " ")
-  (setq git-gutter:added-sign " ")
-  (setq git-gutter:deleted-sign " "))
+;; (use-package git-gutter
+;;   :config
+;;   (global-git-gutter-mode +1)
+;;   (setq git-gutter:modified-sign " ")
+;;   (setq git-gutter:added-sign " ")
+;;   (setq git-gutter:deleted-sign " "))
