@@ -77,6 +77,7 @@
       base = {
         withTools = true;
         withGit = true;
+        withX = true;
       };
 
       essentials = base // {
@@ -101,7 +102,6 @@
         withMarkdown = true;
         withRestructuredText = true;
         withSpellChecker = true;
-        withX = true;
       };
 
       complete = essentials // {
