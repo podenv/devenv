@@ -504,6 +504,7 @@ let
           epkgs.doom-modeline
           epkgs.visual-fill-column
           epkgs.multiple-cursors
+          epkgs.which-key
         ] ++ ivy ++ prog;
       in base ++ (concatModuleList (m: m.emacsPkgs epkgs))));
 
