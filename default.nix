@@ -503,6 +503,7 @@ let
           epkgs.avy
           epkgs.doom-modeline
           epkgs.visual-fill-column
+          epkgs.multiple-cursors
         ] ++ ivy ++ prog;
       in base ++ (concatModuleList (m: m.emacsPkgs epkgs))));
 
