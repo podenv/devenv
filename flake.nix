@@ -8,9 +8,10 @@
       "github:nix-community/emacs-overlay/4728a80913ec511fef8f1777da37c31733f515c2";
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    lean4.url = "github:leanprover/lean4";
   };
 
-  outputs = { self, nixpkgs, emacs-overlay, rust-overlay }:
+  outputs = { self, nixpkgs, emacs-overlay, rust-overlay, lean4 }:
     let
       pkgs = import nixpkgs {
         localSystem = "x86_64-linux";
@@ -19,9 +20,14 @@
         config.allowUnfree = true;
       };
 
-      devent = import ./default.nix;
+      devenNix = import ./default.nix;
+      devent = args: p:
+        devenNix (args // {
+          pkgs = p;
+          lean4 = lean4.packages.x86_64-linux;
+        });
 
-      mkToolchains = args: (devent ({ pkgs = pkgs; } // args)).toolchains;
+      mkToolchains = args: (devent args pkgs).toolchains;
 
       mkSet = setName: args:
         let
@@ -44,9 +50,9 @@
             localSystem = "x86_64-linux";
             config.allowUnfree = true;
           };
-          vscode = (devent ({ pkgs = pkgsNonFree; } // args)).vscode;
-          devenv = devent ({ pkgs = pkgs; } // args);
-          nox = devent ({ pkgs = pkgs; } // args // { withX = false; });
+          vscode = (devent args pkgsNonFree).vscode;
+          devenv = devent args pkgs;
+          nox = devent (args // { withX = false; }) pkgs;
 
         in pkgs.lib.foldr pkgs.lib.recursiveUpdate { } [
           (mkEditor devenv.emacs "emacs" "emacs")
@@ -91,6 +97,7 @@
         withHaskell = true;
         withGo = true;
         withRust = true;
+        withLean = true;
         withDhall = true;
         withJson = true;
         withYaml = true;

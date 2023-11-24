@@ -1,4 +1,4 @@
-{ pkgs,
+{ pkgs, lean4,
 # base
 withTools ? false, withX ? false,
 # build
@@ -129,29 +129,8 @@ let
     }
     {
       enabled = withLean;
-      emacsConfig = "(require 'lean4-mode)";
-      emacsPkgs = epkgs:
-        [
-          (epkgs.trivialBuild {
-            pname = "lean4-mode";
-            src = pkgs.fetchFromGitHub {
-              owner = "leanprover";
-              repo = "lean4-mode";
-              rev = "37d5c99b7b29c80ab78321edd6773200deb0bca6";
-              sha256 = "sha256-+dRaXB7uvN/weSZiKcfSKWhcdJVNg9Vg8k0pJkDNjpc=";
-            };
-            # Somehow, batch batch-byte-compile fails with:
-            #   lean4-input.el:188:1: Error: Lisp nesting exceeds `max-lisp-eval-depth'
-            # Thus, this buildPhase overrides the value in a way that doesn't file compilation
-            buildPhase = ''
-              runHook preBuild
-              emacs -L . --eval '(setq max-lisp-eval-depth 4000 max-specpdl-size 4000)' --batch -f batch-byte-compile *.el
-              runHook postBuild
-            '';
-            buildInputs = [ epkgs.f epkgs.magit-section ];
-            version = "1";
-          })
-        ];
+      emacsPkgs = epkgs: [ lean4.lean4-mode ];
+      buildInputs = [ lean4.lean ];
     }
     {
       enabled = withW3M;
