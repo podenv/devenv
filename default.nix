@@ -341,8 +341,12 @@ let
             sha256 = "1zin7s827bpf9yvzpxpr5n6mv0b5rhh3civsqzmj52mdq365d2js";
           }
         ]);
-      buildInputs = (with pkgs;
-        [ dhall dhall-json dhall-docs ] ++ (when withLsp [ dhall-lsp-server ]));
+      buildInputs = (with pkgs; [
+        dhall
+        dhall-json
+        dhall-docs
+      ] # pkg is currently broken: ++ (when withLsp [ dhall-lsp-server ])
+      );
     }
     {
       enabled = withProtobuf;
