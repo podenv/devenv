@@ -2,7 +2,7 @@
 # base
 withTools ? false, withX ? false,
 # build
-withShake ? false,
+withShake ? false, withJust ? false,
 # lsp
 withLsp ? false,
 # eye friendly, low-constrat color theme
@@ -118,6 +118,11 @@ let
     {
       enabled = withShake;
       buildInputs = with pkgs; [ haskellPackages.shake ];
+    }
+    {
+      enabled = withJust;
+      buildInputs = [ pkgs.just ];
+      emacsPkgs = epkgs: [ epkgs.just-mode ];
     }
     {
       enabled = withGraphviz;

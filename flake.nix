@@ -130,6 +130,7 @@
         withHy = true;
         withGraphviz = true;
         withRescript = true;
+        withJust = true;
       };
 
       mkShell = xs:
