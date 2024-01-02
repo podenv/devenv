@@ -39,9 +39,6 @@
 (use-package man
   :defer t)
 
-(use-package woman
-  :defer t)
-
 (use-package prog-mode
   :config (global-prettify-symbols-mode)
   (defun indicate-buffer-boundaries-left ()
@@ -51,6 +48,9 @@
 (use-package recentf
   :demand t
   :config
+  ;; Open recent files
+  (global-set-key (kbd "C-c r") 'recentf-open-files)
+
   (add-to-list 'recentf-exclude "^/\\(?:ssh\\|su\\|sudo\\)?:")
   (setq-default
    recentf-max-saved-items 1024))
@@ -139,6 +139,23 @@
   (setq-default fill-column 120)
   ;; Don't assume that sentences should have two spaces after periods. This ain't a typewriter.
   (setq sentence-end-double-space nil)
+
+  ;; y/n for  answering yes/no questions
+  (fset 'yes-or-no-p 'y-or-n-p)
+
+  ;; Default shell in term
+  (unless
+      (or (eq system-type 'windows-nt)
+          (not (file-exists-p "/bin/bash")))
+    (setq-default shell-file-name "/bin/bash")
+    (setq explicit-shell-file-name "/bin/bash"))
+
+  ;; Remove text properties for kill ring entries
+  ;; See https://emacs.stackexchange.com/questions/4187
+  (defun unpropertize-kill-ring ()
+    (setq kill-ring (mapcar 'substring-no-properties kill-ring)))
+  (add-hook 'kill-emacs-hook 'unpropertize-kill-ring)
+
   )
 (use-package diminish)
 

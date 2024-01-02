@@ -422,7 +422,8 @@ let
 
   # the fonts
   fonts = pkgs.makeFontsConf {
-    fontDirectories = [ pkgs.iosevka pkgs.noto-fonts-emoji ];
+    fontDirectories =
+      [ pkgs.iosevka pkgs.noto-fonts-emoji pkgs.roboto pkgs.fira-code ];
   };
 
   # the emacs derivation
