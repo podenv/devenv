@@ -461,6 +461,8 @@ let
           epkgs.projectile
           epkgs.ivy-rich
         ];
+        nano = [ epkgs.nano-modeline epkgs.nano-theme epkgs.nano-agenda ]
+          ++ (when withX [ epkgs.svg-lib ]);
         prog = [ epkgs.format-all epkgs.tree-sitter epkgs.tree-sitter-indent ];
         base = [
           (pkgs.runCommand "default.el" { } ''
@@ -484,11 +486,10 @@ let
           epkgs.ace-window
           epkgs.ace-link
           epkgs.avy
-          epkgs.doom-modeline
           epkgs.visual-fill-column
           epkgs.multiple-cursors
           epkgs.which-key
-        ] ++ ivy ++ prog;
+        ] ++ ivy ++ prog ++ nano;
       in base ++ (concatModuleList (m: m.emacsPkgs epkgs))));
 
   # vim
