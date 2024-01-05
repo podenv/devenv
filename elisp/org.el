@@ -1,7 +1,11 @@
+(require 'org-mouse)
 (use-package org
   :config
   ;; Tell org where are the files
   (setq-default org-directory "~/org/")
+
+  ;; Keep track of when the task was completed
+  (setq org-log-done 'time)
 
   ;; Display image inline
   (setq org-startup-with-inline-images t)
