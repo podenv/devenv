@@ -122,7 +122,7 @@ let
     {
       enabled = withJust;
       buildInputs = [ pkgs.just ];
-      emacsPkgs = epkgs: [ epkgs.just-mode ];
+      emacsPkgs = epkgs: [ epkgs.just-mode epkgs.justl ];
     }
     {
       enabled = withGraphviz;

@@ -11,7 +11,7 @@
   (setq org-startup-with-inline-images t)
 
   ;; Ensure shift arrows execute org commands, e.g. change todo state.
-  (setq  org-support-shift-select nil)
+  (setq org-support-shift-select nil)
 
   ;; Insead of "..." show "…" when there's hidden folded content
   ;; Some characters to choose from: …, ⤵, ▼, ↴, ⬎, ⤷, and ⋱
