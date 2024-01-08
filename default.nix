@@ -495,6 +495,7 @@ let
           epkgs.visual-fill-column
           epkgs.multiple-cursors
           epkgs.which-key
+          epkgs.helpful
         ] ++ ivy ++ prog ++ nano;
       in base ++ (concatModuleList (m: m.emacsPkgs epkgs))));
 
