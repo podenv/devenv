@@ -466,14 +466,23 @@ let
           epkgs.company
           epkgs.projectile
           epkgs.ivy-rich
-        ];
-        nano = [ epkgs.nano-modeline epkgs.nano-theme epkgs.nano-agenda ]
-          ++ (when withX [ epkgs.svg-lib ]);
+        ] ++ (when withX [ epkgs.svg-lib ]);
+        nano-agenda = pkgs.fetchFromGitHub {
+          owner = "rougier";
+          repo = "nano-agenda";
+          rev = "3d1e280fd94ac1abd630d0c100a860b94472836d";
+          sha256 = "sha256-jvCO2vw76wz6mWhYjvLCRzOC0UM2i2zlBUPdQPX78rc=";
+        };
+
         prog = [ epkgs.format-all epkgs.tree-sitter epkgs.tree-sitter-indent ];
         base = [
           (pkgs.runCommand "default.el" { } ''
             mkdir -p $out/share/emacs/site-lisp
             cp ${emacsSite} $out/share/emacs/site-lisp/default.el
+          '')
+          (pkgs.runCommand "nano-emacs" { } ''
+            mkdir -p $out/share/emacs/site-lisp
+            cp ${nano-agenda}/*.el $out/share/emacs/site-lisp/
           '')
           epkgs.use-package
           epkgs.vterm
@@ -496,7 +505,7 @@ let
           epkgs.multiple-cursors
           epkgs.which-key
           epkgs.helpful
-        ] ++ ivy ++ prog ++ nano;
+        ] ++ ivy ++ prog;
       in base ++ (concatModuleList (m: m.emacsPkgs epkgs))));
 
   # vim
