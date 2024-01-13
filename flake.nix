@@ -59,6 +59,17 @@
           (mkEditor nox.emacs "emacs-nox" "emacs")
           (mkEditor devenv.vim "vim" "vim")
           (mkEditor vscode "vscode" "code")
+          {
+            apps."x86_64-linux"."emacsclient${setName}" = {
+              type = "app";
+              program = let
+                wrapper = pkgs.writeScriptBin "emacsclient-wrapper" ''
+                  #!/bin/sh
+                  exec ${devenv.emacs}/bin/emacsclient $*
+                '';
+              in "${wrapper}/bin/emacsclient-wrapper";
+            };
+          }
         ];
 
       get_runtime = name: runtime:
