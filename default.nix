@@ -385,7 +385,7 @@ let
     {
       enabled = withOrg;
       emacsConfig = elisp "org";
-      emacsPkgs = epkgs: [ epkgs.org epkgs.org-present epkgs.org-ql ];
+      emacsPkgs = epkgs: [ epkgs.org epkgs.org-present epkgs.org-ql epkgs.org-sidebar ];
     }
     {
       enabled = withAts;
