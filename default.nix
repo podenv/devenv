@@ -86,7 +86,7 @@ let
       emacsConfig = elisp "magit";
       emacsPkgs = epkgs: [
         epkgs.magit
-        epkgs.forge
+        # epkgs.forge
         epkgs.ghub
         epkgs.git-gutter
       ];
