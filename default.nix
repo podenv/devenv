@@ -1,4 +1,4 @@
-{ pkgs, lean4,
+{ pkgs, lean4, lean4-mode,
 # base
 withTools ? false, withX ? false,
 # build
@@ -134,8 +134,8 @@ let
     }
     {
       enabled = withLean;
-      emacsPkgs = epkgs: [ lean4.lean4-mode ];
-      buildInputs = [ lean4.lean ];
+      emacsPkgs = epkgs: [ epkgs.lean4-mode ];
+      # buildInputs = [ lean4.lean ];
     }
     {
       enabled = withW3M;
@@ -157,7 +157,7 @@ let
     }
     {
       enabled = withGo;
-      buildInputs = [ pkgs.go ];
+      # buildInputs = [ pkgs.go ];
       emacsPkgs = epkgs: [ epkgs.go-mode ];
     }
     {
@@ -168,7 +168,7 @@ let
       enabled = withPython;
       minimal = true;
       buildInputs = [
-        (pkgs.python310.withPackages (ps:
+        (pkgs.python311.withPackages (ps:
           with ps;
           let
             ansible = (when withAnsible [ ps.ansible ]);
@@ -203,18 +203,18 @@ let
     }
     {
       enabled = withIdris;
-      buildInputs = [ pkgs.idris2 ];
+      # buildInputs = [ pkgs.idris2 ];
       emacsPkgs = epkgs: [ epkgs.idris-mode ];
       emacsConfig = elisp "idris";
     }
     {
       enabled = withErlang || withElixir;
-      buildInputs = [ pkgs.erlang pkgs.rebar3 ];
+      # buildInputs = [ pkgs.erlang pkgs.rebar3 ];
       emacsPkgs = epkgs: [ epkgs.erlang ];
     }
     {
       enabled = withElixir;
-      buildInputs = [ pkgs.elixir ];
+      # buildInputs = [ pkgs.elixir ];
       emacsPkgs = epkgs: [ epkgs.elixir-mode ];
       emacsConfig = elisp "elixir";
     }
@@ -247,7 +247,7 @@ let
       enabled = withRust;
       name = "rust";
       emacsPkgs = epkgs: [ epkgs.rust-mode ];
-      buildInputs = [ pkgs.cargo pkgs.rustc ];
+      # buildInputs = [ pkgs.cargo pkgs.rustc ];
     }
     {
       enabled = withPurescript;
@@ -262,14 +262,14 @@ let
     }
     {
       enabled = withElm;
-      buildInputs = with pkgs.elmPackages; [ elm elm-format elm-review ];
+      # buildInputs = with pkgs.elmPackages; [ elm elm-format elm-review ];
       emacsPkgs = epkgs: [ epkgs.elm-mode ];
     }
     {
       name = "nodejs";
       enabled = withJavascript || withRescript || withPurescript
         || withTypescript;
-      buildInputs = [ pkgs.nodejs pkgs.nodePackages.pnpm ];
+      buildInputs = [ pkgs.nodejs ];
     }
     {
       enabled = withRescript;
@@ -289,8 +289,8 @@ let
     {
       name = "ocaml";
       enabled = withOcaml;
-      buildInputs =
-        [ pkgs.dune_2 pkgs.opam pkgs.ocaml pkgs.ocamlPackages.merlin ];
+      # buildInputs =
+      #   [ pkgs.dune_2 pkgs.opam pkgs.ocaml pkgs.ocamlPackages.merlin ];
       emacsPkgs = epkgs: [ epkgs.tuareg ];
     }
     {
@@ -351,12 +351,8 @@ let
             sha256 = "1zin7s827bpf9yvzpxpr5n6mv0b5rhh3civsqzmj52mdq365d2js";
           }
         ]);
-      buildInputs = (with pkgs; [
-        dhall
-        dhall-json
-        dhall-docs
-      ] # pkg is currently broken: ++ (when withLsp [ dhall-lsp-server ])
-      );
+      buildInputs = (with pkgs;
+        [ dhall dhall-json dhall-docs ] ++ (when withLsp [ dhall-lsp-server ]));
     }
     {
       enabled = withProtobuf;
@@ -374,7 +370,7 @@ let
     }
     {
       enabled = withPlantuml;
-      buildInputs = [ pkgs.plantuml pkgs.openjdk pkgs.graphviz ];
+      # buildInputs = [ pkgs.plantuml pkgs.openjdk pkgs.graphviz ];
       emacsPkgs = epkgs: [ epkgs.plantuml-mode ];
     }
     {
@@ -399,7 +395,7 @@ let
     }
     {
       enabled = withAts;
-      buildInputs = [ pkgs.ats2 pkgs.haskellPackages.ats-format ];
+      # buildInputs = [ pkgs.ats2 pkgs.haskellPackages.ats-format ];
       emacsConfig = elisp "ats";
     }
     {
@@ -413,22 +409,7 @@ let
     {
       enabled = withNotMuch;
       buildInputs = with pkgs; [ notmuch msmtp dovecot_pigeonhole isync ];
-      emacsPkgs = epkgs: [
-        (epkgs.notmuch.override {
-          elpaBuild = args:
-            epkgs.elpaBuild (args // {
-              patches = [
-                (pkgs.fetchpatch {
-                  url =
-                    "https://github.com/TristanCacqueray/notmuch/commit/26f21e89649a2e1abd842fb6b212cb8ec69ff392.patch";
-                  sha256 =
-                    "sha256-dUQ2Ugyu6wsOpKivwKh3cnpxT03725nhPdW2hYeLVVU=";
-                })
-              ];
-            });
-        })
-        epkgs.ol-notmuch
-      ];
+      emacsPkgs = epkgs: [ epkgs.notmuch epkgs.ol-notmuch ];
     }
   ]);
 
@@ -444,16 +425,20 @@ let
   # the emacs derivation
   emacsDrv = if withX then pkgs.emacs-git else pkgs.emacs-git-nox;
 
+  # Override a package when sources are missing:
   emacsOverride = self: super: {
-    spinner = super.spinner.override {
-      elpaBuild = args:
-        super.elpaBuild (args // {
-          version = "1.7.4";
-          src = pkgs.fetchurl {
-            url = "https://elpa.gnu.org/packages/spinner-1.7.4.tar";
-            sha256 = "140kss25ijbwf8hzflbjz67ry76w2cyrh02axk95n6qcxv7jr7pv";
-          };
-        });
+    lean4-mode = self.melpaBuild {
+      pname = "lean4-mode";
+      version = "1";
+      commit = "1";
+      src = lean4-mode;
+      packageRequires = with self; [ dash f flycheck magit-section lsp-mode s ];
+      recipe = pkgs.writeText "recipe" ''
+        (lean4-mode
+         :repo "leanprover/lean4-mode"
+         :fetcher github
+         :files ("*.el" "data"))
+      '';
     };
   };
 
@@ -560,10 +545,6 @@ let
 
   # devenv derivations collection:
   toolchains = concatModuleList (m: m.buildInputs);
-
-  # share the pinned nixpkgs
-  nixpkgs_src =
-    pkgs.fetchFromGitHub (builtins.fromJSON (builtins.readFile ./nixpkgs.json));
 
 in {
   profile = profile;

@@ -2,19 +2,19 @@
   description = "devenv editor";
 
   inputs = {
-    nixpkgs.url =
-      "github:NixOS/nixpkgs/27ead4fec31f241baed776d046b1dcac431a5919";
-    emacs-overlay.url =
-      "github:nix-community/emacs-overlay/5148f0e35c9b884eec954113941c4292f60e55fa";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
     purescript-overlay.url = "github:thomashoneyman/purescript-overlay";
     purescript-overlay.inputs.nixpkgs.follows = "nixpkgs";
     lean4.url = "github:leanprover/lean4";
+    lean4-mode.url = "github:leanprover/lean4-mode";
+    lean4-mode.flake = false;
   };
 
-  outputs =
-    { self, nixpkgs, emacs-overlay, rust-overlay, purescript-overlay, lean4 }:
+  outputs = { self, nixpkgs, emacs-overlay, rust-overlay, purescript-overlay
+    , lean4, lean4-mode }:
     let
       pkgs = import nixpkgs {
         localSystem = "x86_64-linux";
@@ -32,6 +32,7 @@
         devenNix (args // {
           pkgs = p;
           lean4 = lean4.packages.x86_64-linux;
+          lean4-mode = lean4-mode;
         });
 
       mkToolchains = args: (devent args pkgs).toolchains;
