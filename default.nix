@@ -251,7 +251,12 @@ let
     }
     {
       enabled = withPurescript;
-      buildInputs = [ pkgs.spago pkgs.purescript ];
+      buildInputs = [
+        pkgs.spago-unstable
+        pkgs.purs
+        pkgs.nodePackages_latest.purty
+        pkgs.esbuild
+      ];
       emacsConfig = elisp "purescript";
       emacsPkgs = epkgs: [ epkgs.purescript-mode epkgs.psci epkgs.psc-ide ];
     }
@@ -385,7 +390,12 @@ let
     {
       enabled = withOrg;
       emacsConfig = elisp "org";
-      emacsPkgs = epkgs: [ epkgs.org epkgs.org-present epkgs.org-ql epkgs.org-sidebar ];
+      emacsPkgs = epkgs: [
+        epkgs.org
+        epkgs.org-present
+        epkgs.org-ql
+        epkgs.org-sidebar
+      ];
     }
     {
       enabled = withAts;

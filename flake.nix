@@ -8,14 +8,21 @@
       "github:nix-community/emacs-overlay/5148f0e35c9b884eec954113941c4292f60e55fa";
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    purescript-overlay.url = "github:thomashoneyman/purescript-overlay";
+    purescript-overlay.inputs.nixpkgs.follows = "nixpkgs";
     lean4.url = "github:leanprover/lean4";
   };
 
-  outputs = { self, nixpkgs, emacs-overlay, rust-overlay, lean4 }:
+  outputs =
+    { self, nixpkgs, emacs-overlay, rust-overlay, purescript-overlay, lean4 }:
     let
       pkgs = import nixpkgs {
         localSystem = "x86_64-linux";
-        overlays = [ emacs-overlay.overlay rust-overlay.overlays.default ];
+        overlays = [
+          emacs-overlay.overlay
+          rust-overlay.overlays.default
+          purescript-overlay.overlays.default
+        ];
         # allowUnfree for nvidia
         config.allowUnfree = true;
       };
