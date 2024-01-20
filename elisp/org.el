@@ -48,10 +48,6 @@
   (setq-default
    ;; Start agenda at today
    org-agenda-start-on-weekday nil
-   ;; Look for agenda item in every org files
-   org-agenda-files '("~/org")
-   ;; Match encrypted files too
-   org-agenda-file-regexp "\\`[^.].*\\.org\\(.gpg\\)?\\'"
    ;; Do not dim blocked tasks
    org-agenda-dim-blocked-tasks nil
    ;; Compact the block agenda view
