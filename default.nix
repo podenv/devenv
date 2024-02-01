@@ -491,6 +491,7 @@ let
           epkgs.simpleclip
           epkgs.diminish
           epkgs.ripgrep
+          epkgs.deadgrep
           epkgs.bufler
           epkgs.deadgrep
           epkgs.ace-window
@@ -500,6 +501,7 @@ let
           epkgs.multiple-cursors
           epkgs.which-key
           epkgs.helpful
+          epkgs.plz
         ] ++ ivy ++ prog;
       in base ++ (concatModuleList (m: m.emacsPkgs epkgs))));
 
