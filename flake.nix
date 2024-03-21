@@ -139,6 +139,7 @@
         withGLSL = true;
         withWGSL = true;
         withPlantuml = true;
+        withMermaid = true;
         withProtobuf = true;
         withCapnp = true;
         withThrift = true;

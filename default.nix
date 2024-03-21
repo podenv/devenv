@@ -28,7 +28,7 @@ withHy ? false, withRacket ? false,
 withDhall ? false, withJson ? false, withYaml ? false, withKubernetes ? false,
 # idl
 withPlantuml ? false, withProtobuf ? false, withThrift ? false
-, withCapnp ? false,
+, withCapnp ? false, withMermaid ? false,
 # network
 withRest ? false,
 # packaging
@@ -372,6 +372,11 @@ let
       enabled = withPlantuml;
       # buildInputs = [ pkgs.plantuml pkgs.openjdk pkgs.graphviz ];
       emacsPkgs = epkgs: [ epkgs.plantuml-mode ];
+    }
+    {
+      enabled = withMermaid;
+      buildInputs = [ pkgs.mermaid-cli ];
+      emacsPkgs = epkgs: [ epkgs.mermaid-mode ];
     }
     {
       enabled = withThrift;
