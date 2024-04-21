@@ -113,6 +113,7 @@ let
         findutils
         libnotify
         htop
+        tini
       ];
     }
     {
