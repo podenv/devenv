@@ -227,7 +227,7 @@ let
       enabled = withHaskell;
       name = "haskell";
       emacsConfig = elisp "haskell";
-      emacsPkgs = epkgs: [ epkgs.haskell-mode epkgs.ormolu ];
+      emacsPkgs = epkgs: [ epkgs.haskell-mode ];
       vscodeExtensions = vsext:
         (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
           {
@@ -429,7 +429,7 @@ let
   };
 
   # the emacs derivation
-  emacsDrv = if withX then pkgs.emacs-git else pkgs.emacs-git-nox;
+  emacsDrv = if withX then pkgs.emacs29-pgtk else pkgs.emacs-nox;
 
   # Override a package when sources are missing:
   emacsOverride = self: super: {
@@ -506,7 +506,7 @@ let
           epkgs.visual-fill-column
           epkgs.multiple-cursors
           epkgs.which-key
-          epkgs.helpful
+          # epkgs.helpful
           epkgs.plz
         ] ++ ivy ++ prog;
       in base ++ (concatModuleList (m: m.emacsPkgs epkgs))));

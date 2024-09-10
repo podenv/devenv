@@ -16,4 +16,4 @@
    haskell-process-auto-import-loaded-modules t
    haskell-process-log t)
   )
-(use-package ormolu)
+;; (use-package ormolu)
