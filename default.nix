@@ -429,7 +429,7 @@ let
   };
 
   # the emacs derivation
-  emacsDrv = if withX then pkgs.emacs29-pgtk else pkgs.emacs-nox;
+  emacsDrv = if withX then pkgs.emacs-pgtk else pkgs.emacs-git-nox;
 
   # Override a package when sources are missing:
   emacsOverride = self: super: {
@@ -458,12 +458,22 @@ let
             ;; reset gc to reasonable level
             (setq gc-cons-threshold (* 20 1024 1024))'');
 
+        swiper-src = pkg:
+          pkg.overrideAttrs (old: {
+            src = pkgs.fetchFromGitHub {
+              owner = "abo-abo";
+              repo = "swiper";
+              rev = "2ab47b08bd80bcf67dd70ba413971efa8e4b82f1";
+              sha256 = "sha256-lYmOLPkU3spwp0vYc3PQ2ZRF/IyhrqgEllPAiU8TdWc=";
+            };
+          });
+
         # emacs packages:
         ivy = [
           epkgs.smex
-          epkgs.ivy
-          epkgs.counsel
-          epkgs.swiper
+          (swiper-src epkgs.ivy)
+          (swiper-src epkgs.counsel)
+          (swiper-src epkgs.swiper)
           epkgs.company
           epkgs.projectile
           epkgs.ivy-rich
