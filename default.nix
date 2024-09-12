@@ -75,7 +75,6 @@ let
       enabled = withX && withSolarized;
       name = "solarized";
       url = "https://en.wikipedia.org/wiki/Solarized_(color_scheme)";
-      emacsConfig = elisp "solarized";
       emacsPkgs = epkgs: [ epkgs.solarized-theme ];
       buildInputs = [ pkgs.xorg.xprop ];
     }
@@ -83,7 +82,6 @@ let
       enabled = withGit || withGerrit;
       name = "git";
       minimal = true;
-      emacsConfig = elisp "magit";
       emacsPkgs = epkgs: [
         epkgs.magit
         # epkgs.forge
@@ -178,14 +176,12 @@ let
           in ansible ++ notmuch ++ sphinx
           ++ [ virtualenv pip mypy black flake8 pyyaml ]))
       ];
-      emacsConfig = elisp "python";
       vscodeExtensions = vsext: [ vsext.ms-python.python ];
     }
     {
       enabled = withNix;
       buildInputs = [ pkgs.nixfmt pkgs.nixUnstable ];
       emacsPkgs = epkgs: [ epkgs.nix-mode ];
-      emacsConfig = elisp "nix";
       vscodeExtensions = vsext:
         (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
           {
@@ -206,7 +202,6 @@ let
       enabled = withIdris;
       # buildInputs = [ pkgs.idris2 ];
       emacsPkgs = epkgs: [ epkgs.idris-mode ];
-      emacsConfig = elisp "idris";
     }
     {
       enabled = withErlang || withElixir;
@@ -217,7 +212,6 @@ let
       enabled = withElixir;
       # buildInputs = [ pkgs.elixir ];
       emacsPkgs = epkgs: [ epkgs.elixir-mode ];
-      emacsConfig = elisp "elixir";
     }
     {
       enabled = withGleam;
@@ -226,7 +220,6 @@ let
     {
       enabled = withHaskell;
       name = "haskell";
-      emacsConfig = elisp "haskell";
       emacsPkgs = epkgs: [ epkgs.haskell-mode ];
       vscodeExtensions = vsext:
         (pkgs.vscode-utils.extensionsFromVscodeMarketplace [
@@ -258,7 +251,6 @@ let
         pkgs.nodePackages_latest.purty
         pkgs.esbuild
       ];
-      emacsConfig = elisp "purescript";
       emacsPkgs = epkgs: [ epkgs.purescript-mode epkgs.psci epkgs.psc-ide ];
     }
     {
@@ -276,7 +268,6 @@ let
       enabled = withRescript;
       emacsPkgs = epkgs:
         [ epkgs.rescript-mode ] ++ (when withLsp [ epkgs.lsp-rescript ]);
-      emacsConfig = elisp "rescript";
     }
     {
       enabled = withTypescript;
@@ -285,7 +276,6 @@ let
     {
       enabled = withEmacsEvil;
       emacsPkgs = epkgs: [ epkgs.evil ];
-      emacsConfig = elisp "evil";
     }
     {
       name = "ocaml";
@@ -304,17 +294,14 @@ let
         # epkgs.all-the-icons-ivy
         epkgs.all-the-icons-ivy-rich
       ];
-      emacsConfig = elisp "gfx";
     }
     {
       enabled = withJson;
       buildInputs = [ pkgs.jq ];
       emacsPkgs = epkgs: [ epkgs.json-mode epkgs.counsel-jq ];
-      emacsConfig = elisp "json";
     }
     {
       enabled = withYaml;
-      emacsConfig = elisp "yaml";
       emacsPkgs = epkgs: [ epkgs.yaml-mode ];
     }
     {
@@ -333,7 +320,6 @@ let
     {
       enabled = withDhall;
       name = "dhall";
-      emacsConfig = elisp "dhall";
       emacsPkgs = epkgs: [ epkgs.dhall-mode ];
       vimConfig = "let g:dhall_format=1";
       vimPkgs = vpkgs: [ vpkgs.dhall-vim ];
@@ -365,7 +351,6 @@ let
     }
     {
       enabled = withRest;
-      emacsConfig = if withOrg then elisp "ob-restclient" else "";
       emacsPkgs = epkgs:
         [ epkgs.restclient ] ++ (when withOrg [ epkgs.ob-restclient ]);
     }
@@ -385,13 +370,11 @@ let
     }
     {
       enabled = withMarkdown;
-      emacsConfig = elisp "markdown";
       emacsPkgs = epkgs:
         [ epkgs.markdown-mode ] ++ (when withOrg [ epkgs.ox-gfm ]);
     }
     {
       enabled = withOrg;
-      emacsConfig = elisp "org";
       emacsPkgs = epkgs: [
         epkgs.org
         epkgs.org-present
@@ -402,7 +385,6 @@ let
     {
       enabled = withAts;
       # buildInputs = [ pkgs.ats2 pkgs.haskellPackages.ats-format ];
-      emacsConfig = elisp "ats";
     }
     {
       enabled = withGLSL;
@@ -451,13 +433,6 @@ let
   emacs = ((pkgs.emacsPackagesFor emacsDrv).overrideScope'
     emacsOverride).emacsWithPackages (epkgs:
       (let
-        # the emacs config:
-        emacsSite = pkgs.writeText "default.el" ((elisp "base")
-          + (elisp "base-extra") + (elisp "format-all")
-          + (concatModuleText (m: m.emacsConfig)) + ''
-            ;; reset gc to reasonable level
-            (setq gc-cons-threshold (* 20 1024 1024))'');
-
         swiper-src = pkg:
           pkg.overrideAttrs (old: {
             src = pkgs.fetchFromGitHub {
@@ -487,10 +462,6 @@ let
 
         prog = [ epkgs.format-all epkgs.tree-sitter epkgs.tree-sitter-indent ];
         base = [
-          (pkgs.runCommand "default.el" { } ''
-            mkdir -p $out/share/emacs/site-lisp
-            cp ${emacsSite} $out/share/emacs/site-lisp/default.el
-          '')
           (pkgs.runCommand "nano-emacs" { } ''
             mkdir -p $out/share/emacs/site-lisp
             cp ${nano-agenda}/*.el $out/share/emacs/site-lisp/
