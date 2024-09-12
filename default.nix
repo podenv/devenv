@@ -506,6 +506,7 @@ let
           epkgs.visual-fill-column
           epkgs.multiple-cursors
           epkgs.which-key
+          epkgs.dired-quick-sort
           # epkgs.helpful
           epkgs.plz
         ] ++ ivy ++ prog;
