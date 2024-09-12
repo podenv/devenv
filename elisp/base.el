@@ -248,9 +248,6 @@
 ;; Auto revert files on change
 (global-auto-revert-mode t)
 
-(use-package shell
-  :config
-  (add-hook 'shell-mode-hook 'turn-on-comint-history))
 (use-package eshell
   :config
   (setq-default
