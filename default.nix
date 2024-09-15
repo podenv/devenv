@@ -433,26 +433,13 @@ let
   emacs = ((pkgs.emacsPackagesFor emacsDrv).overrideScope'
     emacsOverride).emacsWithPackages (epkgs:
       (let
-        swiper-src = pkg:
-          pkg.overrideAttrs (old: {
-            src = pkgs.fetchFromGitHub {
-              owner = "abo-abo";
-              repo = "swiper";
-              rev = "2ab47b08bd80bcf67dd70ba413971efa8e4b82f1";
-              sha256 = "sha256-lYmOLPkU3spwp0vYc3PQ2ZRF/IyhrqgEllPAiU8TdWc=";
-            };
-          });
-
         # emacs packages:
-        ivy = [
-          epkgs.smex
-          (swiper-src epkgs.ivy)
-          (swiper-src epkgs.counsel)
-          (swiper-src epkgs.swiper)
-          epkgs.company
-          epkgs.projectile
-          epkgs.ivy-rich
-        ] ++ (when withX [ epkgs.svg-lib ]);
+        vertico = [
+          epkgs.vertico
+          epkgs.orderless
+          epkgs.consult
+          epkgs.corfu-terminal
+        ] ++ (when withX [ epkgs.corfu ]);
         nano-agenda = pkgs.fetchFromGitHub {
           owner = "rougier";
           repo = "nano-agenda";
@@ -466,7 +453,7 @@ let
             mkdir -p $out/share/emacs/site-lisp
             cp ${nano-agenda}/*.el $out/share/emacs/site-lisp/
           '')
-          epkgs.use-package
+          epkgs.company
           epkgs.vterm
           epkgs.anzu
           epkgs.rainbow-delimiters
@@ -490,7 +477,7 @@ let
           epkgs.dired-quick-sort
           # epkgs.helpful
           epkgs.plz
-        ] ++ ivy ++ prog;
+        ] ++ vertico ++ prog ++ (when withX [ epkgs.svg-lib ]);
       in base ++ (concatModuleList (m: m.emacsPkgs epkgs))));
 
   # vim
