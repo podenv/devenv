@@ -30,7 +30,7 @@ withDhall ? false, withJson ? false, withYaml ? false, withKubernetes ? false,
 withPlantuml ? false, withProtobuf ? false, withThrift ? false
 , withCapnp ? false, withMermaid ? false,
 # network
-withRest ? false,
+withRest ? false, withRSS ? false,
 # packaging
 withRpm ? false,
 # admin
@@ -152,7 +152,7 @@ let
     }
     {
       enabled = withKubernetes;
-      emacsPkgs = epkgs: [ epkgs.kubernetes ];
+      emacsPkgs = epkgs: [ epkgs.kubed ];
     }
     {
       enabled = withGo;
@@ -377,10 +377,17 @@ let
       enabled = withOrg;
       emacsPkgs = epkgs: [
         epkgs.org
+        epkgs.denote
+        epkgs.consult-denote
+        epkgs.org-modern
         epkgs.org-present
         epkgs.org-ql
         epkgs.org-sidebar
       ];
+    }
+    {
+      enabled = withRSS;
+      emacsPkgs = epkgs: [ epkgs.elfeed ];
     }
     {
       enabled = withAts;
@@ -406,8 +413,14 @@ let
 
   # the fonts
   fonts = pkgs.makeFontsConf {
-    fontDirectories =
-      [ pkgs.iosevka pkgs.noto-fonts-emoji pkgs.roboto pkgs.fira-code ];
+    fontDirectories = [
+      pkgs.iosevka
+      pkgs.iosevka-comfy.comfy-wide
+      pkgs.iosevka-comfy.comfy
+      pkgs.noto-fonts-emoji
+      pkgs.roboto
+      pkgs.fira-code
+    ];
   };
 
   # the emacs derivation
@@ -438,8 +451,12 @@ let
           epkgs.vertico
           epkgs.orderless
           epkgs.consult
+          epkgs.embark
+          epkgs.embark-consult
+          epkgs.cape
+          epkgs.corfu
           epkgs.corfu-terminal
-        ] ++ (when withX [ epkgs.corfu ]);
+        ];
         nano-agenda = pkgs.fetchFromGitHub {
           owner = "rougier";
           repo = "nano-agenda";
@@ -457,7 +474,13 @@ let
           epkgs.vterm
           epkgs.anzu
           epkgs.rainbow-delimiters
+          epkgs.diredfl
+          epkgs.tmr
+          epkgs.spacious-padding
+          epkgs.goggles
+          epkgs.tempel
           epkgs.undo-tree
+          epkgs.wgrep
           epkgs.diff-hl
           epkgs.dash
           epkgs.dash-functional

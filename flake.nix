@@ -151,6 +151,7 @@
         withGraphviz = true;
         withRescript = true;
         withJust = true;
+        withRSS = true;
       };
 
       mkShell = xs:
