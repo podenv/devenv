@@ -387,7 +387,7 @@ let
     }
     {
       enabled = withRSS;
-      emacsPkgs = epkgs: [ epkgs.elfeed ];
+      emacsPkgs = epkgs: [ epkgs.elfeed epkgs.elfeed-org ];
     }
     {
       enabled = withAts;
@@ -470,6 +470,7 @@ let
             mkdir -p $out/share/emacs/site-lisp
             cp ${nano-agenda}/*.el $out/share/emacs/site-lisp/
           '')
+          epkgs.dirvish
           epkgs.company
           epkgs.vterm
           epkgs.anzu
@@ -477,6 +478,7 @@ let
           epkgs.diredfl
           epkgs.tmr
           epkgs.spacious-padding
+          epkgs.fontaine
           epkgs.goggles
           epkgs.tempel
           epkgs.undo-tree
