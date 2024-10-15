@@ -476,6 +476,7 @@ let
           epkgs.anzu
           epkgs.rainbow-delimiters
           epkgs.diredfl
+          epkgs.reformatter
           epkgs.tmr
           epkgs.spacious-padding
           epkgs.fontaine
