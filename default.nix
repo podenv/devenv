@@ -470,6 +470,8 @@ let
             mkdir -p $out/share/emacs/site-lisp
             cp ${nano-agenda}/*.el $out/share/emacs/site-lisp/
           '')
+          epkgs.treesit-grammars.with-all-grammars
+          epkgs.tree-sitter-langs
           epkgs.dirvish
           epkgs.company
           epkgs.vterm
