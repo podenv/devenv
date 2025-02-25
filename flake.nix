@@ -2,8 +2,10 @@
   description = "devenv editor";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
+    nixpkgs.url =
+      "github:NixOS/nixpkgs/acb77d2bf9a902fe0d3f27c47ab39aa93afb4c2a";
+    emacs-overlay.url =
+      "github:nix-community/emacs-overlay/e61547b1c4cdf6e6ed72862748397e49df9129ca";
     rust-overlay.url = "github:oxalica/rust-overlay";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
     purescript-overlay.url = "github:thomashoneyman/purescript-overlay";
